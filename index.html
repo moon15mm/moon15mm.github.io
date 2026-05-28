@@ -134,15 +134,22 @@ nav{
   backdrop-filter:blur(10px);
 }
 .hero-name{
-  font-size:clamp(52px,9vw,90px);font-weight:900;line-height:1.1;margin-bottom:16px;
+  font-size:clamp(52px,9vw,90px);font-weight:900;line-height:1.1;margin-bottom:8px;
   color:white;
   text-shadow:0 0 80px rgba(34,211,238,.25);
 }
-.hero-name .grad{
+.tw-line{
+  height:clamp(36px,6vw,60px);
+  overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:16px;
+}
+.tw-line .grad{
   background:linear-gradient(135deg,var(--cyan) 0%,var(--accent) 40%,var(--purple) 100%);
   background-size:200% auto;
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
   animation:gradShift 4s linear infinite;
+  font-size:clamp(22px,4vw,42px);font-weight:900;
   white-space:nowrap;
 }
 @keyframes gradShift{
@@ -494,10 +501,10 @@ footer span{
 
   <div class="hero-inner">
     <div class="hero-eyebrow"><span class="ic ic-bounce">🚀</span> مطوّر برمجيات</div>
-    <h1 class="hero-name">
-      ماهر
-      <span class="grad" id="tw-text"> </span><span class="tw-cursor">|</span>
-    </h1>
+    <h1 class="hero-name">ماهر</h1>
+    <div class="tw-line">
+      <span class="grad" id="tw-text"></span><span class="tw-cursor">|</span>
+    </div>
     <p class="hero-sub">
       أصمّم وأبني برمجيات تحلّ مشكلات حقيقية —<br>
       من إدارة المدارس إلى أتمتة العمليات المؤسسية
