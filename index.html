@@ -88,6 +88,11 @@ nav {
   color: var(--white); line-height: 1.15; margin-bottom: 16px;
 }
 .hero-name span { color: var(--accent); }
+.tw-cursor {
+  color: var(--accent); font-weight: 300;
+  animation: blink .75s step-end infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 .hero-sub {
   font-size: clamp(16px,2.5vw,20px); color: rgba(255,255,255,0.7);
   max-width: 520px; margin: 0 auto 36px; line-height: 1.7;
@@ -289,7 +294,7 @@ footer span { color: var(--accent); }
 <section class="hero" id="home">
   <div class="hero-inner">
     <div class="hero-tag">🚀 مطوّر برمجيات</div>
-    <h1 class="hero-name">ماهر<br><span>مطوّر الحلول الذكية</span></h1>
+    <h1 class="hero-name">ماهر<br><span id="tw-text"></span><span class="tw-cursor">|</span></h1>
     <p class="hero-sub">
       أصمّم وأبني برمجيات تحلّ مشكلات حقيقية —<br>
       من إدارة المدارس إلى أتمتة العمليات المؤسسية
@@ -429,5 +434,68 @@ footer span { color: var(--accent); }
   <p>© 2026 — صُنع بـ <span>❤️</span> من ماهر | جميع الحقوق محفوظة</p>
 </footer>
 
+<script>
+/* ══ TYPEWRITER ══ */
+(function(){
+  var el  = document.getElementById('tw-text');
+  var phrases = [
+    'مطوّر الحلول الذكية',
+    'مبرمج Python محترف',
+    'مطوّر واجهات الويب',
+    'صانع برمجيات تعليمية'
+  ];
+  var pi=0, ci=0, deleting=false, pause=false;
+  function tick(){
+    var word = phrases[pi];
+    if(pause){ setTimeout(tick,1800); pause=false; return; }
+    if(!deleting){
+      el.textContent = word.slice(0, ++ci);
+      if(ci === word.length){ deleting=true; pause=true; }
+      setTimeout(tick, deleting?50:95);
+    } else {
+      el.textContent = word.slice(0, --ci);
+      if(ci === 0){ deleting=false; pi=(pi+1)%phrases.length; }
+      setTimeout(tick, 55);
+    }
+  }
+  tick();
+})();
+
+/* ══ COUNT-UP — about section ══ */
+(function(){
+  function countUp(el, end, dur){
+    var start=0, step=end/(dur/16);
+    var t=setInterval(function(){
+      start=Math.min(start+step, end);
+      el.textContent = (end<10 ? start.toFixed(1) : Math.floor(start));
+      if(start>=end) clearInterval(t);
+    },16);
+  }
+  var nums = [
+    {id:'cnt-projects', val:1,  dur:800},
+    {id:'cnt-versions', val:20, dur:1200},
+    {id:'cnt-students', val:847,dur:1500}
+  ];
+  /* إضافة عناصر الإحصاء في قسم "من أنا" */
+  var vis = document.querySelector('.about-visual');
+  if(vis){
+    var numEl = vis.querySelector('.av-num');
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          /* لا نعدّ النسخة لأنها نص، نكتفي بتأثير ظهور */
+          numEl.style.transition='transform .6s, opacity .6s';
+          numEl.style.opacity='0'; numEl.style.transform='translateY(20px)';
+          setTimeout(function(){
+            numEl.style.opacity='1'; numEl.style.transform='translateY(0)';
+          },200);
+          obs.disconnect();
+        }
+      });
+    },{threshold:.5});
+    obs.observe(vis);
+  }
+})();
+</script>
 </body>
 </html>
