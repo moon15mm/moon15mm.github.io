@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MeDo — منصة واتساب للأعمال</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg0:#020c08;--bg1:#071410;--bg2:#0a1f18;
+  --green:#10b981;--green2:#059669;--teal:#14b8a6;
+  --blue:#3b82f6;--purple:#a78bfa;
+  --text:#e2e8f0;--muted:#94a3b8;
+  --border:rgba(255,255,255,.08);--glass:rgba(255,255,255,.04);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Cairo','Tahoma',Arial,sans-serif;background:var(--bg0);color:var(--text);direction:rtl;line-height:1.6;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg0)}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--green),var(--teal));border-radius:3px}
+
+/* ── PROGRESS ── */
+#prog{position:fixed;top:0;right:0;left:0;height:3px;z-index:999}
+#prog-fill{height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--teal),var(--blue));transition:width .1s}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:3px;right:0;left:0;z-index:200;
+  background:rgba(2,12,8,.85);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  height:60px;display:flex;align-items:center;
+  padding:0 clamp(16px,4vw,60px);gap:20px;
+}
+.nav-back{color:var(--muted);text-decoration:none;font-size:14px;font-weight:600;transition:color .2s}
+.nav-back:hover{color:var(--green)}
+.nav-title{
+  font-size:15px;font-weight:900;margin-right:auto;
+  background:linear-gradient(135deg,var(--green),var(--teal));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:90px 24px 60px;
+  position:relative;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 0%,#001f0f 0%,var(--bg0) 65%);
+}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;opacity:.8}
+.orb-1{width:500px;height:500px;background:rgba(16,185,129,.25);top:-150px;right:-100px;animation:floatOrb 11s ease-in-out infinite}
+.orb-2{width:420px;height:420px;background:rgba(20,184,166,.2);bottom:-80px;left:-80px;animation:floatOrb 14s ease-in-out infinite reverse}
+.orb-3{width:280px;height:280px;background:rgba(59,130,246,.2);top:45%;left:60%;animation:floatOrb 9s ease-in-out infinite 3s}
+@keyframes floatOrb{0%,100%{transform:translate(0,0)}33%{transform:translate(35px,-25px)}66%{transform:translate(-20px,18px)}}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:radial-gradient(rgba(16,185,129,.07) 1px,transparent 1px);
+  background-size:36px 36px;opacity:.6;
+}
+.hero-inner{position:relative;z-index:1;max-width:820px}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);
+  border-radius:30px;padding:7px 22px;font-size:13px;font-weight:700;
+  color:var(--green);margin-bottom:28px;backdrop-filter:blur(10px);
+}
+.hero-icon{font-size:72px;margin-bottom:16px;display:inline-block;animation:iconFloat 4s ease-in-out infinite}
+@keyframes iconFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.hero-title{font-size:clamp(42px,8vw,80px);font-weight:900;margin-bottom:10px;color:white}
+.hero-title .grad{
+  background:linear-gradient(135deg,var(--green),var(--teal),var(--blue));
+  background-size:200% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:gradShift 5s linear infinite;
+}
+@keyframes gradShift{0%{background-position:0% center}100%{background-position:200% center}}
+.hero-sub-title{font-size:clamp(16px,3vw,24px);color:var(--muted);font-weight:600;margin-bottom:14px}
+.hero-sub{font-size:15px;color:var(--muted);line-height:1.9;margin-bottom:40px;max-width:560px;margin-right:auto;margin-left:auto}
+.hero-stats{display:flex;gap:32px;justify-content:center;flex-wrap:wrap;margin-bottom:40px}
+.hstat{text-align:center}
+.hstat-num{font-size:30px;font-weight:900;background:linear-gradient(135deg,var(--green),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hstat-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+.hero-divider{width:1px;height:36px;background:var(--border);align-self:center}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:10px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;text-decoration:none;border:none;transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-3px)}
+.btn-green{background:linear-gradient(135deg,var(--green2),var(--green));color:white;box-shadow:0 0 20px rgba(16,185,129,.4)}
+.btn-green:hover{box-shadow:0 0 36px rgba(16,185,129,.6)}
+.btn-ghost{background:var(--glass);border:1px solid var(--border);color:var(--text);backdrop-filter:blur(10px)}
+.btn-ghost:hover{border-color:var(--green);color:var(--green)}
+
+/* ── SECTIONS ── */
+.section{padding:clamp(60px,7vw,90px) clamp(20px,5vw,72px)}
+.sec-inner{max-width:1100px;margin:0 auto}
+.sec-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);border-radius:20px;padding:4px 16px;font-size:12px;font-weight:700;color:var(--green);margin-bottom:14px}
+.sec-h{font-size:clamp(24px,4vw,36px);font-weight:900;color:white;margin-bottom:12px;line-height:1.25}
+.sec-p{font-size:15px;color:var(--muted);line-height:1.9}
+
+/* ── FEATURES ── */
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin-top:36px}
+.feat-card{
+  background:var(--glass);border:1px solid var(--border);border-radius:16px;
+  padding:28px 22px;backdrop-filter:blur(10px);
+  transition:border-color .3s,background .3s,transform .3s;
+}
+.feat-card:hover{border-color:rgba(16,185,129,.35);background:rgba(16,185,129,.05);transform:translateY(-4px)}
+.feat-icon{font-size:32px;margin-bottom:12px;display:inline-block;animation:iconFloat 3.5s ease-in-out infinite}
+.feat-card:nth-child(2) .feat-icon{animation-delay:.4s}
+.feat-card:nth-child(3) .feat-icon{animation-delay:.8s}
+.feat-card:nth-child(4) .feat-icon{animation-delay:1.2s}
+.feat-card:nth-child(5) .feat-icon{animation-delay:1.6s}
+.feat-card:nth-child(6) .feat-icon{animation-delay:2s}
+.feat-card:nth-child(7) .feat-icon{animation-delay:2.4s}
+.feat-card:nth-child(8) .feat-icon{animation-delay:2.8s}
+.feat-title{font-size:15px;font-weight:800;color:white;margin-bottom:6px}
+.feat-desc{font-size:13px;color:var(--muted);line-height:1.7}
+
+/* ── PLANS ── */
+.plans-section{background:var(--bg1)}
+.plans-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-top:36px}
+.plan-card{
+  background:var(--glass);border:1px solid var(--border);border-radius:20px;
+  padding:32px 24px;backdrop-filter:blur(10px);text-align:center;
+  transition:border-color .3s,transform .3s;position:relative;overflow:hidden;
+}
+.plan-card.featured{
+  border-color:rgba(16,185,129,.4);
+  background:rgba(16,185,129,.06);
+  box-shadow:0 0 40px rgba(16,185,129,.12);
+}
+.plan-badge{
+  position:absolute;top:14px;left:14px;
+  background:linear-gradient(135deg,var(--green),var(--teal));
+  color:white;font-size:10px;font-weight:800;
+  border-radius:20px;padding:3px 12px;
+}
+.plan-name{font-size:14px;font-weight:700;color:var(--muted);margin-bottom:8px}
+.plan-price{font-size:40px;font-weight:900;color:white;line-height:1}
+.plan-currency{font-size:16px;color:var(--muted);font-weight:600;vertical-align:super}
+.plan-period{font-size:12px;color:var(--muted);margin-bottom:20px}
+.plan-div{height:1px;background:var(--border);margin:16px 0}
+.plan-feats{list-style:none;text-align:right}
+.plan-feats li{font-size:13px;color:var(--text);padding:5px 0;display:flex;align-items:center;gap:8px}
+.plan-feats li::before{content:"✓";color:var(--green);font-weight:900;flex-shrink:0}
+
+/* ── AI ENGINE ── */
+.ai-section{background:linear-gradient(180deg,var(--bg0),var(--bg1))}
+.ai-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:32px}
+@media(max-width:640px){.ai-grid{grid-template-columns:1fr}}
+.ai-card{
+  background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.15);
+  border-radius:14px;padding:22px 20px;
+  transition:border-color .3s,transform .2s;
+}
+.ai-card:hover{border-color:rgba(16,185,129,.4);transform:translateY(-3px)}
+.ai-icon{font-size:28px;margin-bottom:10px;display:inline-block;animation:iconFloat 4s ease-in-out infinite}
+.ai-card:nth-child(2) .ai-icon{animation-delay:.5s}
+.ai-card:nth-child(3) .ai-icon{animation-delay:1s}
+.ai-card:nth-child(4) .ai-icon{animation-delay:1.5s}
+.ai-title{font-size:14px;font-weight:800;color:white;margin-bottom:5px}
+.ai-desc{font-size:12px;color:var(--muted);line-height:1.7}
+
+/* ── TECH STACK ── */
+.tech-section{background:var(--bg1)}
+.tech-chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.tc{background:var(--glass);border:1px solid var(--border);border-radius:8px;padding:9px 16px;font-size:13px;font-weight:600;color:var(--text);backdrop-filter:blur(10px);display:flex;align-items:center;gap:8px;transition:border-color .2s,background .2s,transform .2s}
+.tc:hover{border-color:rgba(16,185,129,.3);background:rgba(16,185,129,.06);transform:translateY(-2px)}
+
+/* ── CTA ── */
+.cta-section{padding:clamp(60px,7vw,90px) clamp(20px,5vw,72px);background:linear-gradient(135deg,var(--bg1),#020c08);text-align:center;position:relative;overflow:hidden}
+.cta-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 350px at 50% 50%,rgba(16,185,129,.07) 0%,transparent 70%)}
+.cta-inner{max-width:560px;margin:0 auto;position:relative;z-index:1}
+.cta-title{font-size:clamp(24px,4vw,38px);font-weight:900;color:white;margin-bottom:12px}
+.cta-sub{font-size:15px;color:var(--muted);margin-bottom:32px;line-height:1.7}
+.cta-links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.clink{background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:14px 26px;color:var(--text);text-decoration:none;font-size:14px;font-weight:700;display:flex;align-items:center;gap:10px;backdrop-filter:blur(10px);transition:border-color .25s,background .25s,transform .25s,box-shadow .25s}
+.clink:hover{border-color:var(--green);color:var(--green);background:rgba(16,185,129,.07);transform:translateY(-3px);box-shadow:0 0 20px rgba(16,185,129,.15)}
+
+/* ── FOOTER ── */
+footer{background:var(--bg0);border-top:1px solid var(--border);color:var(--muted);text-align:center;padding:20px;font-size:13px}
+footer a{color:var(--green);text-decoration:none}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s,transform .7s}
+.reveal.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<div id="prog"><div id="prog-fill"></div></div>
+
+<nav>
+  <a href="../index.html" class="nav-back">← العودة للمعرض</a>
+  <span class="nav-title">💬 MeDo — منصة واتساب للأعمال</span>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-badge">💼 منصة SaaS للأعمال</div>
+    <div class="hero-icon">💬</div>
+    <h1 class="hero-title"><span class="grad">MeDo</span></h1>
+    <p class="hero-sub-title">منصة واتساب المتكاملة للمطاعم والأعمال</p>
+    <p class="hero-sub">حوّل واتساب إلى قناة مبيعات متكاملة — صندوق وارد موحد، مساعد ذكاء اصطناعي، إدارة طلبات، حملات تسويقية مخصصة، وتحليلات متقدمة. كل شيء في منصة واحدة.</p>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-num" data-target="3" data-suffix=" خطط">3 خطط</div><div class="hstat-lbl">اشتراك SaaS</div></div>
+      <div class="hero-divider"></div>
+      <div class="hstat"><div class="hstat-num" data-target="8" data-suffix="+">8+</div><div class="hstat-lbl">وحدة وظيفية</div></div>
+      <div class="hero-divider"></div>
+      <div class="hstat"><div class="hstat-num" data-target="100" data-suffix="٪">100٪</div><div class="hstat-lbl">مبني بالعربية</div></div>
+    </div>
+    <div class="hero-btns">
+      <a href="#features" class="btn btn-green">🔍 استكشاف المنصة</a>
+      <a href="#contact" class="btn btn-ghost">📬 طلب تجريبي</a>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="sec-inner">
+    <div class="reveal">
+      <div class="sec-tag">✦ مكونات المنصة</div>
+      <h2 class="sec-h">كل ما تحتاجه لإدارة<br>عملك عبر واتساب</h2>
+      <p class="sec-p">من استقبال الطلبات إلى حملات التسويق الذكي — منصة شاملة مبنية للأعمال التجارية العربية</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card reveal">
+        <div class="feat-icon">📥</div>
+        <div class="feat-title">صندوق الوارد الموحد</div>
+        <div class="feat-desc">إدارة جميع محادثات العملاء من رقم واتساب واحد مع دعم تعدد المستخدمين والتدخل البشري</div>
+      </div>
+      <div class="feat-card reveal">
+        <div class="feat-icon">🤖</div>
+        <div class="feat-title">مساعد الذكاء الاصطناعي</div>
+        <div class="feat-desc">وكيل AI يرد على استفسارات العملاء بناءً على الكتالوج ويُنجز الطلبات تلقائياً</div>
+      </div>
+      <div class="feat-card reveal">
+        <div class="feat-icon">🛍️</div>
+        <div class="feat-title">إدارة الكتالوج والطلبات</div>
+        <div class="feat-desc">كتالوج منتجات تفاعلي داخل واتساب مع نظام طلبات متكامل وتتبع حالة كل طلب</div>
+      </div>
+      <div class="feat-card reveal">
+        <div class="feat-icon">💳</div>
+        <div class="feat-title">روابط الدفع التلقائية</div>
+        <div class="feat-desc">إرسال روابط دفع مشفرة داخل المحادثة مع دعم Stripe وميسر وتتبع حالة الدفع</div>
+      </div>
+      <div class="feat-card reveal">
+        <div class="feat-icon">📣</div>
+        <div class="feat-title">حملات التسويق الذكي</div>
+        <div class="feat-desc">حملات مخصصة لكل شريحة عملاء مع اختبار A/B تلقائي وجدولة الإرسال في الوقت المثالي</div>
+      </div>
+      <div class="feat-card reveal">
+        <div class="feat-icon">👥</div>
+        <div class="feat-title">تقسيم العملاء بالذكاء الاصطناعي</div>
+        <div class="feat-desc">تقسيم ديناميكي تلقائي: عملاء نشطون، معرضون للمغادرة، جدد، ذوو قيمة عالية</div>
+      </div>
+      <div class="feat-card reveal">
+        <div class="feat-icon">📊</div>
+        <div class="feat-title">لوحة التحليلات</div>
+        <div class="feat-desc">إحصاءات المحادثات والمبيعات وأداء الحملات في لوحة تحكم تفاعلية متكاملة</div>
+      </div>
+      <div class="feat-card reveal">
+        <div class="feat-icon">⚙️</div>
+        <div class="feat-title">لوحة الإدارة</div>
+        <div class="feat-desc">إدارة المؤسسات والخطط والمستخدمين مع نظام صلاحيات متدرج ومتكامل</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI ENGINE -->
+<section class="section ai-section">
+  <div class="sec-inner">
+    <div class="reveal">
+      <div class="sec-tag">✦ محرك التسويق الذكي</div>
+      <h2 class="sec-h">ذكاء اصطناعي يعمل<br>لصالح عملك على مدار الساعة</h2>
+      <p class="sec-p">ليس مجرد روبوت دردشة — محرك تسويق متكامل يتعلم ويتكيف ويحسّن أداءه باستمرار</p>
+    </div>
+    <div class="ai-grid">
+      <div class="ai-card reveal">
+        <div class="ai-icon">🔍</div>
+        <div class="ai-title">تحليل سلوك العملاء</div>
+        <div class="ai-desc">رصد الرسائل والمشتريات والتفاعلات لبناء ملف شامل لكل عميل</div>
+      </div>
+      <div class="ai-card reveal">
+        <div class="ai-icon">💡</div>
+        <div class="ai-title">التحليل التنبؤي</div>
+        <div class="ai-desc">توقع ما سيحتاجه العميل قبل أن يطلب، وتحديد أفضل وقت لإرسال العروض</div>
+      </div>
+      <div class="ai-card reveal">
+        <div class="ai-icon">✍️</div>
+        <div class="ai-title">توليد المحتوى التلقائي</div>
+        <div class="ai-desc">صياغة رسائل تسويقية مخصصة لكل عميل بنبرة صوت العلامة التجارية</div>
+      </div>
+      <div class="ai-card reveal">
+        <div class="ai-icon">📉</div>
+        <div class="ai-title">الكشف المبكر عن المغادرة</div>
+        <div class="ai-desc">رصد العملاء المعرضين للتوقف وإطلاق حملات إعادة تنشيط تلقائياً</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANS -->
+<section class="section plans-section">
+  <div class="sec-inner">
+    <div class="reveal">
+      <div class="sec-tag">✦ خطط الاشتراك</div>
+      <h2 class="sec-h">أسعار واضحة لكل حجم عمل</h2>
+      <p class="sec-p">اشترك في الخطة المناسبة وابدأ فوراً — دفع شهري مرن بدون التزامات</p>
+    </div>
+    <div class="plans-grid">
+      <div class="plan-card reveal">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price"><span class="plan-currency">ر.س</span> 199</div>
+        <div class="plan-period">/ شهرياً</div>
+        <div class="plan-div"></div>
+        <ul class="plan-feats">
+          <li>صندوق الوارد الموحد</li>
+          <li>كتالوج المنتجات</li>
+          <li>إدارة الطلبات</li>
+          <li>روابط الدفع</li>
+          <li>مساعد AI محدود</li>
+        </ul>
+      </div>
+      <div class="plan-card featured reveal">
+        <div class="plan-badge">الأكثر طلباً</div>
+        <div class="plan-name">Professional</div>
+        <div class="plan-price"><span class="plan-currency">ر.س</span> 499</div>
+        <div class="plan-period">/ شهرياً</div>
+        <div class="plan-div"></div>
+        <ul class="plan-feats">
+          <li>كل مزايا Starter</li>
+          <li>حملات تسويقية</li>
+          <li>تقسيم العملاء AI</li>
+          <li>لوحة التحليلات الكاملة</li>
+          <li>مساعد AI غير محدود</li>
+        </ul>
+      </div>
+      <div class="plan-card reveal">
+        <div class="plan-name">Enterprise</div>
+        <div class="plan-price"><span class="plan-currency">ر.س</span> 999</div>
+        <div class="plan-period">/ شهرياً</div>
+        <div class="plan-div"></div>
+        <ul class="plan-feats">
+          <li>كل مزايا Professional</li>
+          <li>تكامل POS كامل</li>
+          <li>أرقام واتساب متعددة</li>
+          <li>API مفتوح</li>
+          <li>دعم مخصص</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH -->
+<section class="section tech-section">
+  <div class="sec-inner">
+    <div class="reveal">
+      <div class="sec-tag">✦ التقنيات</div>
+      <h2 class="sec-h">مبني بأحدث تقنيات SaaS</h2>
+    </div>
+    <div class="tech-chips reveal">
+      <span class="tc">⚛️ Next.js / React</span>
+      <span class="tc">🎨 Tailwind CSS</span>
+      <span class="tc">🗄️ Prisma / PostgreSQL</span>
+      <span class="tc">💬 WhatsApp Business API</span>
+      <span class="tc">🤖 OpenAI</span>
+      <span class="tc">💳 Stripe / Moyasar</span>
+      <span class="tc">🔐 Auth محلي</span>
+      <span class="tc">📊 Analytics Dashboard</span>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="cta-inner reveal">
+    <h2 class="cta-title">هل تريد تجربة المنصة<br>في عملك؟</h2>
+    <p class="cta-sub">تواصل معي للحصول على عرض تجريبي أو للاستفسار عن تطبيق المنصة لمطعمك أو نشاطك التجاري</p>
+    <div class="cta-links">
+      <a href="https://wa.me/966505187895" target="_blank" class="clink">📲 واتساب</a>
+      <a href="mailto:moon15mm@gmail.com" class="clink">📧 البريد الإلكتروني</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>← <a href="../index.html">العودة للمعرض</a> &nbsp;|&nbsp; © 2026 ماهر</p>
+</footer>
+
+<script>
+window.addEventListener('scroll',function(){
+  var p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  document.getElementById('prog-fill').style.width=Math.min(p,100)+'%';
+});
+function animateCount(el,target,suffix,dur){
+  var start=null;
+  function step(ts){
+    if(!start)start=ts;
+    var p=Math.min((ts-start)/dur,1),e=p===1?1:1-Math.pow(2,-10*p);
+    el.textContent=Math.floor(e*target)+suffix;
+    if(p<1)requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+var cuObs=new IntersectionObserver(function(en){
+  en.forEach(function(e){
+    if(!e.isIntersecting)return;
+    var el=e.target,t=parseInt(el.dataset.target),s=el.dataset.suffix||'';
+    if(!isNaN(t))animateCount(el,t,s,1200);
+    cuObs.unobserve(el);
+  });
+},{threshold:.5});
+document.querySelectorAll('[data-target]').forEach(function(el){
+  el.textContent='0'+(el.dataset.suffix||'');
+  cuObs.observe(el);
+});
+var rv=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(function(el){rv.observe(el)});
+</script>
+</body>
+</html>

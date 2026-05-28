@@ -470,28 +470,54 @@ footer span{
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
 
-/* ══ SECOND PROJECT CARD ══ */
+/* ══ CATEGORY HEADER ══ */
+.cat-header{
+  display:flex;align-items:center;gap:12px;
+  margin:48px 0 24px;padding:14px 20px;
+  background:rgba(255,255,255,.03);border:1px solid var(--border);
+  border-radius:12px;backdrop-filter:blur(10px);
+}
+.cat-icon{font-size:20px}
+.cat-label{font-size:15px;font-weight:900;color:white}
+.cat-count{
+  margin-right:auto;font-size:12px;font-weight:700;
+  background:rgba(96,165,250,.12);border:1px solid rgba(96,165,250,.2);
+  color:var(--accent);border-radius:20px;padding:2px 12px;
+}
+
+/* ══ SECOND CARD (Education - Orange) ══ */
 .project-card-wrap-2{
-  margin-bottom:32px;
-  position:relative;border-radius:26px;
-  padding:2px;
+  margin-bottom:32px;position:relative;border-radius:26px;padding:2px;
   background:linear-gradient(90deg,#f59e0b,var(--purple),var(--cyan),#f59e0b);
-  background-size:300% 100%;
-  animation:borderFlow 4s linear infinite;
+  background-size:300% 100%;animation:borderFlow 4s linear infinite;
   box-shadow:0 0 40px rgba(245,158,11,.15);
 }
 .pc-visual-2{
   padding:52px 44px;
   background:linear-gradient(145deg,rgba(30,18,5,.95),rgba(120,53,15,.35));
-  position:relative;overflow:hidden;
-  display:flex;flex-direction:column;justify-content:center;
+  position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;
 }
 .pc-visual-2::after{
-  content:'';position:absolute;
-  width:320px;height:320px;border-radius:50%;
+  content:'';position:absolute;width:320px;height:320px;border-radius:50%;
   background:radial-gradient(circle,rgba(245,158,11,.1) 0%,transparent 70%);
-  bottom:-100px;left:-60px;
-  animation:glowPulse 3s ease-in-out infinite;
+  bottom:-100px;left:-60px;animation:glowPulse 3s ease-in-out infinite;
+}
+/* ══ THIRD CARD (Business - Green) ══ */
+.project-card-wrap-3{
+  margin-bottom:32px;position:relative;border-radius:26px;padding:2px;
+  background:linear-gradient(90deg,#10b981,var(--blue),var(--purple),#10b981);
+  background-size:300% 100%;animation:borderFlow 4s linear infinite;
+  box-shadow:0 0 40px rgba(16,185,129,.12);
+}
+.pc-visual-3{
+  padding:52px 44px;
+  background:linear-gradient(145deg,rgba(2,20,12,.95),rgba(5,150,105,.3));
+  position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;
+}
+.pc-visual-3::after{
+  content:'';position:absolute;width:320px;height:320px;border-radius:50%;
+  background:radial-gradient(circle,rgba(16,185,129,.1) 0%,transparent 70%);
+  bottom:-100px;left:-60px;animation:glowPulse 3s ease-in-out infinite;
 }
 
 /* ══ REVEAL ══ */
@@ -539,8 +565,8 @@ footer span{
     </div>
     <div class="hero-stats">
       <div class="hs">
-        <div class="hs-num" data-target="2" data-suffix="" data-display="2">2</div>
-        <div class="hs-lbl">مشاريع مُطبَّقة</div>
+        <div class="hs-num" data-target="3" data-suffix="" data-display="3">3</div>
+        <div class="hs-lbl">مشاريع مُنجزة</div>
       </div>
       <div class="hero-divider"></div>
       <div class="hs">
@@ -574,6 +600,8 @@ footer span{
         <div class="skill-chip"><span class="ic">📲</span> WhatsApp API</div>
         <div class="skill-chip"><span class="ic">🖥️</span> Tkinter GUI</div>
         <div class="skill-chip"><span class="ic">☁️</span> Cloudflare Tunnel</div>
+        <div class="skill-chip"><span class="ic">⚛️</span> Next.js / React</div>
+        <div class="skill-chip"><span class="ic">🤖</span> OpenAI API</div>
       </div>
       <div class="about-stats">
         <div class="astat">
@@ -613,7 +641,14 @@ footer span{
     <div class="reveal">
       <div class="sec-tag"><span class="ic ic-spin">✦</span> المشاريع</div>
       <h2 class="sec-h">ما بنيته حتى الآن</h2>
-      <p class="sec-p" style="color:var(--muted)">برمجيات مجرّبة ميدانياً تعمل في مدارس حقيقية</p>
+      <p class="sec-p" style="color:var(--muted)">مشاريع متنوعة في التعليم والأعمال — مجرّبة وقيد التطوير</p>
+    </div>
+
+    <!-- ═══ CATEGORY: EDUCATION ═══ -->
+    <div class="cat-header reveal">
+      <span class="cat-icon ic ic-bounce">🎓</span>
+      <span class="cat-label">قطاع التعليم</span>
+      <span class="cat-count">مشروعان</span>
     </div>
 
     <!-- DarbStu -->
@@ -685,6 +720,49 @@ footer span{
       </div>
     </div>
 
+    <!-- ═══ CATEGORY: BUSINESS ═══ -->
+    <div class="cat-header reveal" style="margin-top:56px">
+      <span class="cat-icon ic ic-float">💼</span>
+      <span class="cat-label">قطاع الأعمال</span>
+      <span class="cat-count">مشروع واحد</span>
+    </div>
+
+    <!-- MeDo -->
+    <div class="project-card-wrap-3 reveal" style="opacity:1;transform:none">
+      <div class="project-card">
+        <div class="pc-visual pc-visual-3">
+          <div class="pc-icon" style="animation-delay:1.2s">💬</div>
+          <div class="pc-name" style="background:linear-gradient(135deg,white 40%,#6ee7b7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">MeDo</div>
+          <div class="pc-ver" style="background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.25);color:#10b981">SaaS — 2026</div>
+          <div class="pc-tags">
+            <span class="pc-tag">Next.js</span>
+            <span class="pc-tag">OpenAI</span>
+            <span class="pc-tag">WhatsApp API</span>
+            <span class="pc-tag">Stripe</span>
+          </div>
+        </div>
+        <div class="pc-info">
+          <div class="pc-live" style="background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.25);color:#10b981">
+            <span style="width:7px;height:7px;border-radius:50%;background:#10b981;animation:pulse 2s infinite;flex-shrink:0;display:inline-block"></span>
+            منصة SaaS قيد التطوير
+          </div>
+          <h3 class="pc-title">MeDo — واتساب للمطاعم والأعمال</h3>
+          <p class="pc-desc">منصة SaaS متكاملة تحوّل واتساب إلى قناة مبيعات — صندوق وارد موحد، مساعد AI، إدارة طلبات، حملات تسويق ذكية، وتحليلات متقدمة للمطاعم والأعمال التجارية.</p>
+          <ul class="pc-feats">
+            <li>صندوق وارد موحد مع دعم تعدد الموظفين</li>
+            <li>مساعد AI يجيب العملاء ويُنجز الطلبات</li>
+            <li>حملات تسويق مخصصة بالذكاء الاصطناعي</li>
+            <li>3 خطط اشتراك: 199 / 499 / 999 ر.س</li>
+            <li>دعم Stripe وميسر للدفع</li>
+          </ul>
+          <div class="pc-actions">
+            <a href="medo/index.html" class="btn-sm bsm-glow" style="background:linear-gradient(135deg,#059669,#10b981);box-shadow:0 0 16px rgba(16,185,129,.4)"><span class="ic ic-float">📖</span> عرض المشروع</a>
+            <a href="#contact" class="btn-sm bsm-ghost"><span class="ic ic-wobble">📬</span> طلب تجريبي</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Coming Soon -->
     <div class="coming-grid reveal">
       <div class="coming-card">
@@ -696,13 +774,13 @@ footer span{
       <div class="coming-card">
         <div class="cc-icon">📊</div>
         <div class="cc-title">مشروع قادم</div>
-        <div class="cc-desc">منصة تحليل بيانات تعليمية — قيد التصميم</div>
+        <div class="cc-desc">منصة تحليل بيانات متقدمة — قيد التصميم</div>
         <span class="cc-soon">⏳ قريباً</span>
       </div>
       <div class="coming-card">
         <div class="cc-icon">🤖</div>
         <div class="cc-title">مشروع قادم</div>
-        <div class="cc-desc">أدوات أتمتة ذكية للقطاع التعليمي</div>
+        <div class="cc-desc">أدوات أتمتة ذكية للمؤسسات</div>
         <span class="cc-soon">⏳ قريباً</span>
       </div>
     </div>
