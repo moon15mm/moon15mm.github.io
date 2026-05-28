@@ -126,15 +126,6 @@ nav{position:fixed;top:3px;right:0;left:0;z-index:200;background:rgba(3,6,15,.85
 .wm-btn{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:white;border:none;border-radius:8px;padding:11px 24px;font-size:13px;font-weight:700;width:100%;margin-top:8px;font-family:inherit;cursor:default}
 .wm-caption{text-align:center;font-size:11px;color:#64748b;margin-top:12px}
 
-/* ── PACKAGING ── */
-.pack-section{background:var(--bg0)}
-.terminal{background:#0d1117;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:20px 24px;margin-top:28px;font-family:'Courier New',monospace;font-size:13px;line-height:2}
-.term-line{display:flex;gap:12px;align-items:flex-start}
-.term-prompt{color:#f59e0b;flex-shrink:0}
-.term-cmd{color:#e2e8f0}
-.term-comment{color:#6b7280;font-size:11px;margin-right:8px}
-.term-output{color:#10b981}
-
 /* ── AGENTS ── */
 .agents-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:32px}
 .agent-card{background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.15);border-radius:12px;padding:20px 18px;transition:border-color .3s,transform .2s}
@@ -277,38 +268,6 @@ footer a{color:var(--orange);text-decoration:none}
       </div>
       <button class="wm-btn" disabled>التالي ← خطوة 3 من 4</button>
       <div class="wm-caption">⚡ بعد الإعداد يعمل النظام بالكامل بدون إنترنت</div>
-    </div>
-  </div>
-</section>
-
-<!-- PACKAGING -->
-<section class="section pack-section">
-  <div class="sec-inner">
-    <div class="reveal">
-      <div class="sec-tag">✦ حزمة لكل مدرسة</div>
-      <h2 class="sec-h">أمر واحد ينشئ ZIP جاهز<br>مخصص لكل مدرسة</h2>
-      <p class="sec-p">سكريبت التجهيز ينشئ ملف ZIP مخصص يتضمن Python المدمج — المدرسة تفك الضغط وتنقر على تشغيل.bat</p>
-    </div>
-    <div class="terminal reveal">
-      <div class="term-line">
-        <span class="term-prompt">$</span>
-        <span class="term-cmd">python package_for_school.py <span style="color:#f59e0b">--school</span> <span style="color:#6ee7b7">"مدرسة الأمل الثانوية"</span> <span style="color:#f59e0b">--password</span> <span style="color:#6ee7b7">"amal2026"</span></span>
-      </div>
-      <div class="term-line" style="margin-top:4px">
-        <span class="term-prompt" style="color:#6b7280">→</span>
-        <span class="term-output">✓ تم إنشاء: Desktop/ETEC-مدرسة-الأمل-الثانوية.zip</span>
-      </div>
-      <div class="term-line">
-        <span class="term-prompt" style="color:#6b7280">→</span>
-        <span class="term-output">✓ Python مدمج — لا يحتاج تثبيت</span>
-      </div>
-      <div class="term-line">
-        <span class="term-prompt" style="color:#6b7280">→</span>
-        <span class="term-output">✓ كلمة المرور المؤقتة: amal2026</span>
-      </div>
-      <div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.07)">
-        <span style="color:#6b7280;font-size:11px">خيارات أخرى: --port 8080 | --no-python | --out "D:\packages"</span>
-      </div>
     </div>
   </div>
 </section>
