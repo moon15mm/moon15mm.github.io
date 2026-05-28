@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ماهر — مطوّر برمجيات</title>
+<meta name="description" content="معرض مشاريع برمجية متخصصة في حلول الإدارة المدرسية">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --navy:   #0f1f3d;
+  --blue:   #1d4ed8;
+  --light:  #3b82f6;
+  --accent: #60a5fa;
+  --green:  #10b981;
+  --text:   #1e293b;
+  --muted:  #64748b;
+  --bg:     #f8fafc;
+  --white:  #ffffff;
+  --border: #e2e8f0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Cairo', 'Tahoma', Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  direction: rtl;
+  line-height: 1.6;
+}
+
+/* ══ NAVBAR ══ */
+nav {
+  position: fixed; top:0; right:0; left:0; z-index:100;
+  background: rgba(15,31,61,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 0 clamp(20px,5vw,80px);
+  display: flex; align-items: center; justify-content: space-between;
+  height: 64px;
+}
+.nav-logo {
+  font-size: 22px; font-weight: 900; color: var(--white);
+  text-decoration: none; display: flex; align-items: center; gap: 8px;
+}
+.nav-logo span { color: var(--accent); }
+.nav-links { display: flex; gap: 28px; list-style: none; }
+.nav-links a {
+  color: rgba(255,255,255,0.75); text-decoration: none;
+  font-size: 14px; font-weight: 600; transition: color .2s;
+}
+.nav-links a:hover { color: var(--accent); }
+
+/* ══ HERO ══ */
+.hero {
+  min-height: 100vh;
+  background: linear-gradient(145deg, #0a1628 0%, #0f2444 45%, #1a3a6b 100%);
+  display: flex; align-items: center; justify-content: center;
+  text-align: center; padding: 80px 20px 60px;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 900px 600px at 50% 40%, rgba(29,78,216,0.18) 0%, transparent 70%);
+}
+/* floating dots grid */
+.hero::after {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+.hero-inner { position: relative; z-index: 1; max-width: 700px; }
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(96,165,250,0.15); border: 1px solid rgba(96,165,250,0.35);
+  border-radius: 30px; padding: 6px 18px;
+  color: var(--accent); font-size: 13px; font-weight: 700;
+  margin-bottom: 24px;
+}
+.hero-name {
+  font-size: clamp(42px, 7vw, 72px); font-weight: 900;
+  color: var(--white); line-height: 1.15; margin-bottom: 16px;
+}
+.hero-name span { color: var(--accent); }
+.hero-sub {
+  font-size: clamp(16px,2.5vw,20px); color: rgba(255,255,255,0.7);
+  max-width: 520px; margin: 0 auto 36px; line-height: 1.7;
+}
+.hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 28px; border-radius: 10px;
+  font-size: 15px; font-weight: 700; font-family: inherit;
+  cursor: pointer; text-decoration: none; transition: transform .2s, box-shadow .2s;
+  border: none;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
+.btn-primary { background: var(--blue); color: white; }
+.btn-outline { background: transparent; border: 2px solid rgba(255,255,255,0.3); color: white; }
+
+/* scroll indicator */
+.scroll-hint {
+  position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  color: rgba(255,255,255,0.4); font-size: 12px; z-index: 1;
+  animation: bounce 2s infinite;
+}
+@keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(8px)} }
+
+/* ══ SECTION ══ */
+section { padding: clamp(60px,8vw,100px) clamp(20px,5vw,80px); }
+
+.section-tag {
+  display: inline-block; background: #dbeafe; color: var(--blue);
+  border-radius: 20px; padding: 4px 16px; font-size: 12px; font-weight: 700;
+  margin-bottom: 12px;
+}
+.section-title {
+  font-size: clamp(28px,4vw,40px); font-weight: 900; color: var(--navy);
+  margin-bottom: 10px;
+}
+.section-sub { font-size: 16px; color: var(--muted); max-width: 500px; }
+
+/* ══ ABOUT ══ */
+#about { background: white; }
+.about-grid {
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+}
+.about-text { }
+.about-text p { font-size: 15px; color: var(--muted); line-height: 1.8; margin-top: 16px; }
+.skills-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 24px;
+}
+.skill-chip {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 14px; font-size: 13px; font-weight: 600; color: var(--text);
+  display: flex; align-items: center; gap: 8px;
+}
+.about-visual {
+  background: linear-gradient(135deg, #0f2444, #1d4ed8);
+  border-radius: 20px; padding: 40px 32px; color: white; text-align: center;
+}
+.av-num { font-size: 52px; font-weight: 900; color: var(--accent); }
+.av-lbl { font-size: 14px; opacity: 0.85; margin-bottom: 24px; }
+.av-divider { height: 1px; background: rgba(255,255,255,0.15); margin: 16px 0; }
+
+/* ══ PROJECTS ══ */
+#projects { background: var(--bg); }
+.projects-wrap { max-width: 1100px; margin: 48px auto 0; }
+
+/* Featured project card */
+.project-featured {
+  background: white; border-radius: 20px; overflow: hidden;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+  display: grid; grid-template-columns: 1.1fr 0.9fr;
+  margin-bottom: 32px; transition: transform .3s, box-shadow .3s;
+}
+.project-featured:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.14); }
+
+.pf-visual {
+  background: linear-gradient(135deg, #0f2444 0%, #1e3a5f 50%, #1d4ed8 100%);
+  padding: 48px 40px; display: flex; flex-direction: column;
+  justify-content: center; align-items: flex-start; position: relative; overflow: hidden;
+}
+.pf-visual::before {
+  content: '';
+  position: absolute; width: 300px; height: 300px; border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  top: -100px; left: -80px;
+}
+.pf-app-icon {
+  font-size: 56px; margin-bottom: 16px; position: relative; z-index: 1;
+}
+.pf-app-name {
+  font-size: 32px; font-weight: 900; color: white;
+  position: relative; z-index: 1; margin-bottom: 8px;
+}
+.pf-app-name span { color: var(--accent); }
+.pf-version {
+  background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 20px; padding: 4px 14px; font-size: 12px; color: rgba(255,255,255,0.85);
+  display: inline-block; margin-bottom: 20px; position: relative; z-index: 1;
+}
+.pf-tags { display: flex; flex-wrap: wrap; gap: 8px; position: relative; z-index: 1; }
+.pf-tag {
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 6px; padding: 4px 12px; font-size: 12px; color: rgba(255,255,255,0.9);
+  font-weight: 600;
+}
+
+.pf-info { padding: 40px 36px; display: flex; flex-direction: column; justify-content: center; }
+.pf-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #dcfce7; color: #16a34a; border-radius: 20px;
+  padding: 4px 14px; font-size: 12px; font-weight: 700; margin-bottom: 16px;
+}
+.pf-title { font-size: 24px; font-weight: 900; color: var(--navy); margin-bottom: 12px; }
+.pf-desc { font-size: 14px; color: var(--muted); line-height: 1.8; margin-bottom: 20px; }
+.pf-features { list-style: none; margin-bottom: 28px; }
+.pf-features li {
+  font-size: 13px; color: var(--text); padding: 5px 0;
+  display: flex; align-items: flex-start; gap: 8px;
+}
+.pf-features li::before { content: "✓"; color: var(--green); font-weight: 900; flex-shrink: 0; }
+.pf-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn-sm {
+  padding: 9px 20px; font-size: 13px; border-radius: 8px;
+  font-weight: 700; cursor: pointer; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: transform .2s, box-shadow .2s; border: none; font-family: inherit;
+}
+.btn-sm:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,0,0,0.15); }
+.bsm-primary { background: var(--blue); color: white; }
+.bsm-outline { background: white; border: 1.5px solid var(--border); color: var(--text); }
+
+/* Coming soon cards */
+.coming-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;
+}
+.coming-card {
+  background: white; border-radius: 16px; border: 2px dashed var(--border);
+  padding: 36px 24px; text-align: center; color: var(--muted);
+  transition: border-color .2s, transform .2s;
+}
+.coming-card:hover { border-color: var(--light); transform: translateY(-2px); }
+.cc-icon { font-size: 36px; margin-bottom: 12px; opacity: 0.5; }
+.cc-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 6px; opacity: 0.6; }
+.cc-desc { font-size: 13px; line-height: 1.6; }
+.cc-soon {
+  display: inline-block; margin-top: 14px;
+  background: #f1f5f9; border-radius: 20px; padding: 4px 14px;
+  font-size: 11px; font-weight: 700; color: var(--muted);
+}
+
+/* ══ CONTACT ══ */
+#contact {
+  background: linear-gradient(135deg, #0f2444, #1d4ed8);
+  text-align: center; color: white;
+}
+.contact-inner { max-width: 600px; margin: 0 auto; }
+.contact-inner .section-title { color: white; }
+.contact-inner .section-sub { color: rgba(255,255,255,0.75); margin: 0 auto 36px; }
+.contact-links { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+.clink {
+  background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 10px; padding: 12px 24px;
+  color: white; text-decoration: none; font-size: 14px; font-weight: 700;
+  display: flex; align-items: center; gap: 8px;
+  transition: background .2s, transform .2s;
+}
+.clink:hover { background: rgba(255,255,255,0.22); transform: translateY(-2px); }
+
+/* ══ FOOTER ══ */
+footer {
+  background: var(--navy); color: rgba(255,255,255,0.5);
+  text-align: center; padding: 24px 20px; font-size: 13px;
+}
+footer span { color: var(--accent); }
+
+/* ══ RESPONSIVE ══ */
+@media (max-width: 768px) {
+  .about-grid { grid-template-columns: 1fr; }
+  .project-featured { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav>
+  <a href="#" class="nav-logo">〈<span>M</span>/〉</a>
+  <ul class="nav-links">
+    <li><a href="#about">من أنا</a></li>
+    <li><a href="#projects">المشاريع</a></li>
+    <li><a href="#contact">تواصل</a></li>
+  </ul>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero" id="home">
+  <div class="hero-inner">
+    <div class="hero-tag">🚀 مطوّر برمجيات</div>
+    <h1 class="hero-name">ماهر<br><span>مطوّر الحلول الذكية</span></h1>
+    <p class="hero-sub">
+      أصمّم وأبني برمجيات تحلّ مشكلات حقيقية —<br>
+      من إدارة المدارس إلى أتمتة العمليات المؤسسية
+    </p>
+    <div class="hero-btns">
+      <a href="#projects" class="btn btn-primary">🗂️ تصفّح المشاريع</a>
+      <a href="#contact" class="btn btn-outline">📬 تواصل معي</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>تمرير للأسفل</span>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M12 5v14M5 12l7 7 7-7"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ══ ABOUT ══ -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-text">
+      <div class="section-tag">من أنا</div>
+      <h2 class="section-title">مطوّر متخصص في<br>حلول التعليم والإدارة</h2>
+      <p>أعمل على تطوير برمجيات مخصصة تعالج تحديات حقيقية يواجهها القطاع التعليمي في المملكة العربية السعودية — من متابعة الغياب وتواصل أولياء الأمور إلى إدارة الباصات والتقارير التحليلية.</p>
+      <p>أؤمن بأن البرمجيات الجيدة لا تكون جيدة إلا حين تُبنى من داخل البيئة التي تخدمها — لذا كل مشروع يبدأ من تجربة ميدانية حقيقية.</p>
+      <div class="skills-grid">
+        <div class="skill-chip">🐍 Python / FastAPI</div>
+        <div class="skill-chip">🌐 HTML / CSS / JS</div>
+        <div class="skill-chip">🗄️ SQLite / JSON</div>
+        <div class="skill-chip">📲 واتساب API</div>
+        <div class="skill-chip">🖥️ Tkinter GUI</div>
+        <div class="skill-chip">☁️ Cloudflare Tunnel</div>
+      </div>
+    </div>
+    <div class="about-visual">
+      <div class="av-num">3.6.7</div>
+      <div class="av-lbl">آخر إصدار منشور</div>
+      <div class="av-divider"></div>
+      <div style="font-size:13px;opacity:0.85;line-height:1.9;">
+        ✅ تحديثات مستمرة<br>
+        ✅ دعم فني فعّال<br>
+        ✅ مُختبَر في بيئة حقيقية<br>
+        ✅ متوافق مع نظام نور<br>
+        ✅ مفتوح المصدر على GitHub
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PROJECTS ══ -->
+<section id="projects">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="section-tag">المشاريع</div>
+    <h2 class="section-title">ما بنيته حتى الآن</h2>
+    <p class="section-sub">برمجيات مجرّبة ميدانياً تعمل في مدارس حقيقية</p>
+  </div>
+
+  <div class="projects-wrap">
+
+    <!-- ═ DarbStu — Featured Card ═ -->
+    <div class="project-featured">
+      <div class="pf-visual">
+        <div class="pf-app-icon">🏫</div>
+        <div class="pf-app-name">نظام <span>دَرب</span></div>
+        <div class="pf-version">v3.6.7 — 2026</div>
+        <div class="pf-tags">
+          <span class="pf-tag">Python</span>
+          <span class="pf-tag">FastAPI</span>
+          <span class="pf-tag">WhatsApp</span>
+          <span class="pf-tag">SQLite</span>
+        </div>
+      </div>
+      <div class="pf-info">
+        <div class="pf-badge">🟢 مُطبَّق ومُشغَّل</div>
+        <h3 class="pf-title">نظام دَرب لإدارة شؤون الطلاب</h3>
+        <p class="pf-desc">
+          حل شامل لمتابعة الغياب والتأخر، وإشعار أولياء الأمور تلقائياً عبر واتساب، وإدارة الباصات المدرسية — مُطوَّر من تجربة ميدانية حقيقية داخل المدرسة.
+        </p>
+        <ul class="pf-features">
+          <li>تسجيل الغياب والتأخر من الويب أو هاتف المعلم مباشرةً</li>
+          <li>إشعارات واتساب فورية لأولياء الأمور</li>
+          <li>إدارة باصات مع تتبع صعود الطلاب</li>
+          <li>تقارير شاملة وتصدير لنظام نور</li>
+          <li>8 أدوار وصلاحيات مخصصة لكل منسوب</li>
+        </ul>
+        <div class="pf-actions">
+          <a href="darb/index.html" class="btn-sm bsm-primary">📖 عرض المشروع</a>
+          <a href="https://github.com/moon15mm/DarbStu" target="_blank" class="btn-sm bsm-outline">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coming Soon Cards -->
+    <div class="coming-grid">
+      <div class="coming-card">
+        <div class="cc-icon">🏢</div>
+        <div class="cc-title">مشروع قادم</div>
+        <div class="cc-desc">برنامج إدارة مؤسسية متكامل — قيد التطوير</div>
+        <span class="cc-soon">⏳ قريباً</span>
+      </div>
+      <div class="coming-card">
+        <div class="cc-icon">📊</div>
+        <div class="cc-title">مشروع قادم</div>
+        <div class="cc-desc">منصة تحليل بيانات تعليمية — قيد التصميم</div>
+        <span class="cc-soon">⏳ قريباً</span>
+      </div>
+      <div class="coming-card">
+        <div class="cc-icon">🤖</div>
+        <div class="cc-title">مشروع قادم</div>
+        <div class="cc-desc">أدوات أتمتة ذكية للقطاع التعليمي</div>
+        <span class="cc-soon">⏳ قريباً</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ CONTACT ══ -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="section-tag" style="background:rgba(255,255,255,0.15);color:white;">تواصل</div>
+    <h2 class="section-title">هل لديك مشروع في ذهنك؟</h2>
+    <p class="section-sub">أسعد بالتواصل ومناقشة احتياجاتك البرمجية</p>
+    <div class="contact-links">
+      <a href="https://github.com/moon15mm" target="_blank" class="clink">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub
+      </a>
+      <a href="mailto:moon15mm@gmail.com" class="clink">
+        📧 moon15mm@gmail.com
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <p>© 2026 — صُنع بـ <span>❤️</span> من ماهر | جميع الحقوق محفوظة</p>
+</footer>
+
+</body>
+</html>

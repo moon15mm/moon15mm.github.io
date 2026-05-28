@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نظام دَرب — إدارة شؤون الطلاب</title>
+<meta name="description" content="نظام دَرب: الحل الشامل لمتابعة الغياب والتأخر وإدارة الباصات وتواصل أولياء الأمور">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --navy:#0f1f3d;--blue:#1d4ed8;--light:#3b82f6;--accent:#60a5fa;
+  --green:#10b981;--red:#ef4444;--yellow:#f59e0b;
+  --text:#1e293b;--muted:#64748b;--bg:#f8fafc;--white:#fff;--border:#e2e8f0;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Cairo','Tahoma',Arial,sans-serif;background:var(--bg);color:var(--text);direction:rtl;line-height:1.6}
+
+/* ══ NAV ══ */
+nav{
+  position:fixed;top:0;right:0;left:0;z-index:200;
+  background:rgba(15,31,61,.96);backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(255,255,255,.08);
+  height:60px;display:flex;align-items:center;
+  padding:0 clamp(16px,5vw,64px);gap:16px;
+}
+.nav-back{color:rgba(255,255,255,.7);text-decoration:none;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;transition:color .2s}
+.nav-back:hover{color:var(--accent)}
+.nav-title{color:white;font-weight:900;font-size:16px;margin-right:auto}
+.nav-title span{color:var(--accent)}
+.nav-pill{
+  background:rgba(96,165,250,.15);border:1px solid rgba(96,165,250,.3);
+  color:var(--accent);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:700;
+}
+.nav-toc{display:flex;gap:20px;list-style:none;margin-right:auto}
+.nav-toc a{color:rgba(255,255,255,.65);text-decoration:none;font-size:13px;font-weight:600;transition:color .2s}
+.nav-toc a:hover{color:var(--accent)}
+@media(max-width:768px){.nav-toc{display:none}}
+
+/* ══ HERO ══ */
+.hero{
+  min-height:100vh;padding-top:60px;
+  background:linear-gradient(150deg,#070e1d 0%,#0f2444 40%,#1a3a6b 80%,#1d4ed8 100%);
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;position:relative;overflow:hidden;
+}
+.hero::after{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1px);
+  background-size:28px 28px;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 800px 500px at 50% 45%,rgba(29,78,216,.22) 0%,transparent 70%);
+}
+.hero-inner{position:relative;z-index:1;max-width:760px;padding:0 24px}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(96,165,250,.15);border:1px solid rgba(96,165,250,.3);
+  border-radius:30px;padding:7px 20px;color:var(--accent);
+  font-size:13px;font-weight:700;margin-bottom:28px;
+}
+.hero-title{font-size:clamp(48px,8vw,80px);font-weight:900;color:white;line-height:1.1;margin-bottom:16px}
+.hero-title span{color:var(--accent)}
+.hero-sub{font-size:clamp(16px,2.5vw,20px);color:rgba(255,255,255,.7);line-height:1.75;margin-bottom:40px}
+.hero-badges{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:44px}
+.hb{
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  border-radius:8px;padding:8px 18px;color:white;font-size:13px;font-weight:600;
+}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;padding:13px 30px;
+  border-radius:10px;font-size:15px;font-weight:700;font-family:inherit;
+  cursor:pointer;text-decoration:none;transition:transform .2s,box-shadow .2s;border:none;
+}
+.btn:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,.3)}
+.btn-p{background:var(--blue);color:white}
+.btn-o{background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.3);color:white}
+.scroll-hint{
+  position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
+  color:rgba(255,255,255,.35);font-size:11px;
+  display:flex;flex-direction:column;align-items:center;gap:4px;z-index:1;
+  animation:boun 2s infinite;
+}
+@keyframes boun{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(7px)}}
+
+/* ══ SECTIONS ══ */
+.section{padding:clamp(56px,8vw,96px) clamp(20px,5vw,72px)}
+.section-inner{max-width:1100px;margin:0 auto}
+.stag{
+  display:inline-block;background:#dbeafe;color:var(--blue);
+  border-radius:20px;padding:4px 16px;font-size:12px;font-weight:700;margin-bottom:12px;
+}
+.stag-green{background:#dcfce7;color:#16a34a}
+.stag-red{background:#fee2e2;color:#dc2626}
+.stag-purple{background:#ede9fe;color:#7c3aed}
+.stag-yellow{background:#fef3c7;color:#d97706}
+.sec-h{font-size:clamp(26px,4vw,38px);font-weight:900;color:var(--navy);margin-bottom:10px;line-height:1.2}
+.sec-p{font-size:15px;color:var(--muted);max-width:560px;line-height:1.8}
+.divider{height:1px;background:var(--border);margin:0}
+
+/* ══ FEATURE STRIP (section intro) ══ */
+.feat-intro{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin-top:0}
+@media(max-width:720px){.feat-intro{grid-template-columns:1fr}}
+
+/* ══ STAT CARDS ══ */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+@media(max-width:640px){.stat-row{grid-template-columns:1fr 1fr}}
+.stat{border-radius:14px;padding:18px 16px;color:white;text-align:center}
+.stat .n{font-size:36px;font-weight:900}
+.stat .l{font-size:12px;opacity:.9;margin-top:2px}
+.sc-b{background:linear-gradient(135deg,#1d4ed8,#3b82f6)}
+.sc-r{background:linear-gradient(135deg,#dc2626,#ef4444)}
+.sc-y{background:linear-gradient(135deg,#d97706,#f59e0b)}
+.sc-g{background:linear-gradient(135deg,#059669,#10b981)}
+
+/* ══ CHART ══ */
+.chart-wrap{background:white;border-radius:12px;border:1px solid var(--border);padding:16px 20px}
+.chart-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:12px}
+.chart{display:flex;align-items:flex-end;gap:8px;height:100px}
+.bar-w{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+.bar{width:100%;border-radius:4px 4px 0 0;transition:height .3s}
+.bar-l{font-size:10px;color:var(--muted);white-space:nowrap}
+
+/* ══ TABLE ══ */
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{background:var(--navy);color:white;padding:10px 14px;text-align:right;font-weight:600}
+.tbl td{padding:9px 14px;border-bottom:1px solid #f1f5f9}
+.tbl tr:nth-child(even) td{background:#f8fafc}
+.badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700}
+.b-g{background:#dcfce7;color:#16a34a}
+.b-r{background:#fee2e2;color:#dc2626}
+.b-y{background:#fef3c7;color:#d97706}
+.b-b{background:#dbeafe;color:#1d4ed8}
+.blur{display:inline-block;background:#cbd5e1;border-radius:4px;color:transparent;filter:blur(4px);min-width:90px;user-select:none}
+
+/* ══ MOCKUP CARD ══ */
+.mockup{background:white;border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,.07)}
+.mockup-bar{background:var(--navy);color:white;padding:11px 16px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px}
+.mockup-body{padding:16px;background:#f8fafc}
+
+/* ══ 2-COL / 3-COL ══ */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+@media(max-width:720px){.two{grid-template-columns:1fr}.three{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.three{grid-template-columns:1fr}}
+
+/* ══ FEATURE CARDS ══ */
+.feat-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-top:24px}
+.fc{background:white;border:1px solid var(--border);border-radius:12px;padding:18px 16px;text-align:center}
+.fc .i{font-size:30px;margin-bottom:8px}
+.fc .t{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.fc .d{font-size:12px;color:var(--muted);line-height:1.5}
+
+/* ══ BENEFIT BOX ══ */
+.benefit{
+  background:linear-gradient(135deg,#f0fdf4,#dcfce7);
+  border:1px solid #bbf7d0;border-radius:12px;
+  padding:16px 20px;margin-top:20px;
+  font-size:13px;color:#166534;
+  display:flex;align-items:flex-start;gap:12px;
+}
+.benefit ul{padding-right:18px}
+.benefit li{margin-bottom:5px;line-height:1.6}
+
+/* ══ PHONE MOCKUP ══ */
+.phone{
+  width:200px;background:white;border-radius:22px;
+  border:3px solid var(--navy);overflow:hidden;
+  box-shadow:0 6px 24px rgba(0,0,0,.15);margin:0 auto;
+}
+.ph-bar{background:var(--navy);color:white;padding:11px 14px;font-size:12px;font-weight:700;text-align:center}
+.ph-body{padding:12px;background:#f8fafc;min-height:180px}
+.ph-btn{display:block;width:100%;padding:10px;border-radius:8px;text-align:center;font-size:12px;font-weight:700;margin-bottom:8px;color:white}
+
+/* ══ WA PHONE ══ */
+.wa-phone{
+  width:210px;background:white;border-radius:22px;
+  border:3px solid var(--navy);overflow:hidden;
+  box-shadow:0 6px 24px rgba(0,0,0,.15);margin:0 auto;
+}
+.wa-bar{background:#128c7e;color:white;padding:10px 14px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px}
+.wa-body{padding:10px;background:#e5ddd5;min-height:200px}
+.wa-msg{background:white;border-radius:10px;padding:9px 11px;font-size:11px;margin-bottom:8px;line-height:1.65;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.wa-msg strong{color:#128c7e}
+.wa-time{color:#999;font-size:10px;text-align:left;margin-top:3px}
+
+/* ══ BUS CARD ══ */
+.bus-card{background:white;border-radius:10px;border:1px solid var(--border);padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px}
+.bus-sts{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap}
+
+/* ══ ROLE GRID ══ */
+.roles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
+@media(max-width:640px){.roles{grid-template-columns:1fr 1fr}}
+.role{border-radius:12px;padding:16px 12px;text-align:center;color:white}
+.role .ri{font-size:22px;margin-bottom:6px}
+.role .rt{font-size:13px;font-weight:700;margin-bottom:4px}
+.role .rd{font-size:11px;opacity:.85;line-height:1.4}
+
+/* ══ COMPARE TABLE ══ */
+.cmp{width:100%;border-collapse:collapse;font-size:14px}
+.cmp th{background:var(--navy);color:white;padding:12px 16px;text-align:right;font-weight:700}
+.cmp td{padding:10px 16px;border-bottom:1px solid #f1f5f9}
+.cmp tr:nth-child(even) td{background:#f8fafc}
+.yes{color:var(--green);font-weight:700}
+.no{color:var(--red);font-weight:700}
+
+/* ══ CTA ══ */
+.cta-block{
+  background:linear-gradient(135deg,var(--navy),var(--blue));
+  border-radius:16px;padding:40px 36px;color:white;text-align:center;margin-top:32px;
+}
+.cta-block h3{font-size:24px;font-weight:900;margin-bottom:8px}
+.cta-block p{font-size:14px;opacity:.85;line-height:1.8;margin-bottom:28px}
+.cta-btns{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+.cta-btn{
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);
+  color:white;border-radius:10px;padding:11px 24px;font-size:14px;font-weight:700;
+  text-decoration:none;font-family:inherit;cursor:pointer;
+  display:inline-flex;align-items:center;gap:8px;
+  transition:background .2s,transform .2s;
+}
+.cta-btn:hover{background:rgba(255,255,255,.25);transform:translateY(-2px)}
+.cta-btn-solid{background:white;color:var(--navy)}
+.cta-btn-solid:hover{background:#f0f9ff}
+
+/* ══ LIVE GRID ══ */
+.stu-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}
+@media(max-width:600px){.stu-grid{grid-template-columns:repeat(4,1fr)}}
+.stu{border-radius:8px;padding:8px 4px;text-align:center;font-size:11px;font-weight:700;color:white}
+.sp{background:#16a34a}.sa{background:#dc2626}.sl{background:#d97706}.se{background:#0891b2}
+
+/* ══ INFO BOX ══ */
+.info-box{background:#eff6ff;border-right:4px solid var(--blue);border-radius:6px;padding:13px 16px;font-size:13px;line-height:1.7;color:var(--navy);margin:14px 0}
+
+/* ══ FOOTER ══ */
+footer{background:var(--navy);color:rgba(255,255,255,.5);text-align:center;padding:24px;font-size:13px}
+footer span{color:var(--accent)}
+
+/* ══ PROGRESS BAR ══ */
+#progress{position:fixed;top:60px;right:0;left:0;height:3px;background:rgba(255,255,255,.1);z-index:199}
+#progress-bar{height:100%;background:linear-gradient(90deg,var(--light),var(--accent));width:0%;transition:width .1s}
+
+/* ══ SECTION REVEAL ══ */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s,transform .6s}
+.reveal.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<div id="progress"><div id="progress-bar"></div></div>
+
+<!-- NAV -->
+<nav>
+  <a href="../index.html" class="nav-back">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    العودة
+  </a>
+  <span class="nav-title">نظام <span>دَرب</span></span>
+  <span class="nav-pill">v3.6.7</span>
+  <ul class="nav-toc">
+    <li><a href="#features">المزايا</a></li>
+    <li><a href="#absences">الغياب</a></li>
+    <li><a href="#whatsapp">واتساب</a></li>
+    <li><a href="#bus">الباصات</a></li>
+    <li><a href="#reports">التقارير</a></li>
+    <li><a href="#roles">الأدوار</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">🏫 نظام إدارة مدرسي متكامل</div>
+    <h1 class="hero-title">نظام <span>دَرب</span></h1>
+    <p class="hero-sub">
+      الحل الشامل لمتابعة الغياب والتأخر وإشعار أولياء الأمور<br>
+      وإدارة الباصات — مُطوَّر من تجربة ميدانية حقيقية
+    </p>
+    <div class="hero-badges">
+      <span class="hb">🌐 واجهة ويب</span>
+      <span class="hb">📲 واتساب تلقائي</span>
+      <span class="hb">🚌 إدارة الباصات</span>
+      <span class="hb">👨‍👩‍👧 بوابة الأولياء</span>
+      <span class="hb">📊 تقارير فورية</span>
+      <span class="hb">🔒 8 أدوار وصلاحيات</span>
+    </div>
+    <div class="hero-btns">
+      <a href="https://github.com/moon15mm/DarbStu" target="_blank" class="btn btn-p">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        عرض على GitHub
+      </a>
+      <a href="#features" class="btn btn-o">📖 استكشف المشروع</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>تمرير للأسفل</span>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+  </div>
+</header>
+
+<!-- ══════════ 1. OVERVIEW ══════════ -->
+<section class="section" id="features" style="background:white">
+<div class="section-inner reveal">
+  <div class="two" style="align-items:center;gap:56px">
+    <div>
+      <div class="stag">نظرة عامة</div>
+      <h2 class="sec-h">لوحة المراقبة اليومية</h2>
+      <p class="sec-p">إحصاءات فورية لحالة المدرسة كاملاً في لمحة واحدة — عدد الحاضرين والغائبين والمتأخرين في أي لحظة.</p>
+      <div class="feat-cards" style="grid-template-columns:1fr 1fr;margin-top:20px">
+        <div class="fc"><div class="i">⚡</div><div class="t">تحديث فوري</div><div class="d">البيانات تُحدَّث مع كل تسجيل</div></div>
+        <div class="fc"><div class="i">📊</div><div class="t">رسم بياني</div><div class="d">تطور الغياب خلال الأسبوع</div></div>
+        <div class="fc"><div class="i">🔔</div><div class="t">تنبيهات ذكية</div><div class="d">تحذير عند ارتفاع الغياب</div></div>
+        <div class="fc"><div class="i">🖨️</div><div class="t">طباعة فورية</div><div class="d">قائمة الغائبين بنقرة</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="mockup">
+        <div class="mockup-bar">🏫 مدرسة الدرب الثانوية &nbsp;|&nbsp; الثلاثاء 28 مايو 2026</div>
+        <div class="mockup-body">
+          <div class="stat-row">
+            <div class="stat sc-b"><div class="n">847</div><div class="l">👤 إجمالي الطلاب</div></div>
+            <div class="stat sc-r"><div class="n">23</div><div class="l">❌ غائب اليوم</div></div>
+            <div class="stat sc-y"><div class="n">14</div><div class="l">⏰ متأخر اليوم</div></div>
+            <div class="stat sc-g"><div class="n">810</div><div class="l">✅ حاضر اليوم</div></div>
+          </div>
+          <div class="chart-wrap">
+            <div class="chart-title">📈 الغياب خلال آخر 7 أيام</div>
+            <div class="chart">
+              <div class="bar-w"><div class="bar" style="height:58px;background:#ef4444"></div><div class="bar-l">أربعاء</div></div>
+              <div class="bar-w"><div class="bar" style="height:42px;background:#ef4444"></div><div class="bar-l">خميس</div></div>
+              <div class="bar-w"><div class="bar" style="height:72px;background:#ef4444"></div><div class="bar-l">جمعة</div></div>
+              <div class="bar-w"><div class="bar" style="height:32px;background:#ef4444"></div><div class="bar-l">سبت</div></div>
+              <div class="bar-w"><div class="bar" style="height:52px;background:#ef4444"></div><div class="bar-l">أحد</div></div>
+              <div class="bar-w"><div class="bar" style="height:28px;background:#3b82f6"></div><div class="bar-l">اثنين</div></div>
+              <div class="bar-w"><div class="bar" style="height:44px;background:#f59e0b"></div><div class="bar-l">اليوم</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════ 2. ABSENCES ══════════ -->
+<section class="section" id="absences" style="background:var(--bg)">
+<div class="section-inner reveal">
+  <div class="stag stag-red">تسجيل الغياب والتأخر</div>
+  <h2 class="sec-h">3 نقرات — والفصل كاملاً مُسجَّل</h2>
+  <p class="sec-p">واجهات متعددة لتسجيل الغياب: ويب، رابط للمعلم مباشرةً على هاتفه، أو باركود عند البوابة.</p>
+
+  <div class="two" style="margin-top:28px">
+    <div>
+      <div class="mockup">
+        <div class="mockup-bar">📋 تسجيل غياب الفصل — الصف الأول أ</div>
+        <div class="mockup-body">
+          <div style="display:flex;gap:8px;margin-bottom:10px">
+            <select style="flex:1;padding:7px;border:1px solid var(--border);border-radius:7px;font-size:12px;font-family:inherit"><option>الصف الأول — أ (28 طالب)</option></select>
+            <select style="flex:1;padding:7px;border:1px solid var(--border);border-radius:7px;font-size:12px;font-family:inherit"><option>28/05/2026</option></select>
+          </div>
+          <table class="tbl">
+            <tr><th>#</th><th>الطالب</th><th>الحالة</th></tr>
+            <tr><td>1</td><td><span class="blur">xxxxxxxxxxxxxxx</span></td><td><span class="badge b-g">✅ حاضر</span></td></tr>
+            <tr><td>2</td><td><span class="blur">xxxxxxxxxxxxxxx</span></td><td><span class="badge b-r">❌ غائب</span></td></tr>
+            <tr><td>3</td><td><span class="blur">xxxxxxxxxxxxxxx</span></td><td><span class="badge b-y">⏰ متأخر</span></td></tr>
+            <tr><td>4</td><td><span class="blur">xxxxxxxxxxxxxxx</span></td><td><span class="badge b-g">✅ حاضر</span></td></tr>
+            <tr><td>5</td><td><span class="blur">xxxxxxxxxxxxxxx</span></td><td><span class="badge b-b">📝 مأذون</span></td></tr>
+          </table>
+          <button style="width:100%;margin-top:10px;padding:9px;background:var(--blue);color:white;border:none;border-radius:7px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:700">💾 حفظ وإرسال الإشعارات</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="mockup" style="margin-bottom:14px">
+        <div class="mockup-bar">⏰ تسجيل التأخر — البوابة الرئيسية</div>
+        <div class="mockup-body">
+          <div style="background:white;border:2px dashed var(--border);border-radius:8px;padding:14px;text-align:center;margin-bottom:10px">
+            <div style="font-size:28px">📱</div>
+            <div style="font-size:12px;color:var(--muted)">مسح باركود الطالب<br>أو البحث بالاسم أو الرقم</div>
+          </div>
+          <table class="tbl">
+            <tr><th>الطالب</th><th>الفصل</th><th>وقت الدخول</th></tr>
+            <tr><td><span class="blur" style="min-width:70px">xxxxxxxx</span></td><td>3-ب</td><td style="color:#d97706;font-weight:700">7:38 ص</td></tr>
+            <tr><td><span class="blur" style="min-width:70px">xxxxxxxx</span></td><td>2-أ</td><td style="color:#d97706;font-weight:700">7:45 ص</td></tr>
+            <tr><td><span class="blur" style="min-width:70px">xxxxxxxx</span></td><td>1-ج</td><td style="color:#dc2626;font-weight:700">8:02 ص</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="info-box">🔗 <strong>رابط المعلم:</strong> كل معلم يحصل على رابط خاص بفصله — يسجّل الغياب من هاتفه مباشرةً دون أي تطبيق أو تسجيل دخول.</div>
+    </div>
+  </div>
+
+  <div class="benefit">
+    <span style="font-size:22px">💡</span>
+    <ul>
+      <li>تسجيل غياب فصل كامل في أقل من دقيقة</li>
+      <li>يعمل من أي هاتف أو جهاز — بدون تثبيت أي تطبيق</li>
+      <li>تعديل غياب أيام سابقة بكل سهولة</li>
+      <li>إرسال إشعارات واتساب تلقائياً فور الحفظ</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════ 3. LIVE MONITOR ══════════ -->
+<section class="section" style="background:white">
+<div class="section-inner reveal">
+  <div class="two" style="align-items:center;gap:48px">
+    <div>
+      <div class="stag">المراقبة الحية</div>
+      <h2 class="sec-h">حالة كل طالب — الآن</h2>
+      <p class="sec-p">شبكة تفاعلية تُظهر حالة كل طالب في الوقت الفعلي مع تحديث فوري عند أي تغيير.</p>
+      <div class="benefit" style="margin-top:20px">
+        <span style="font-size:20px">💡</span>
+        <ul>
+          <li>فلترة سريعة: الغائبون فقط أو حسب الفصل</li>
+          <li>بحث فوري عن أي طالب</li>
+          <li>طباعة قائمة الغائبين للطابور الصباحي</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div class="mockup">
+        <div class="mockup-bar">👁️ المراقبة الحية — الصف الأول أ</div>
+        <div class="mockup-body">
+          <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
+            <span class="badge b-g" style="padding:5px 12px;font-size:12px">✅ حاضر: 810</span>
+            <span class="badge b-r" style="padding:5px 12px;font-size:12px">❌ غائب: 23</span>
+            <span class="badge b-y" style="padding:5px 12px;font-size:12px">⏰ متأخر: 14</span>
+            <span class="badge b-b" style="padding:5px 12px;font-size:12px">📝 مأذون: 7</span>
+          </div>
+          <div class="stu-grid">
+            <div class="stu sp">حاضر</div><div class="stu sp">حاضر</div>
+            <div class="stu sa">غائب</div><div class="stu sp">حاضر</div>
+            <div class="stu sl">متأخر</div><div class="stu sp">حاضر</div>
+            <div class="stu sp">حاضر</div><div class="stu sp">حاضر</div>
+            <div class="stu sa">غائب</div><div class="stu sp">حاضر</div>
+            <div class="stu se">مأذون</div><div class="stu sp">حاضر</div>
+            <div class="stu sp">حاضر</div><div class="stu sl">متأخر</div>
+            <div class="stu sp">حاضر</div><div class="stu sp">حاضر</div>
+            <div class="stu sa">غائب</div><div class="stu sp">حاضر</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════ 4. WHATSAPP ══════════ -->
+<section class="section" id="whatsapp" style="background:var(--bg)">
+<div class="section-inner reveal">
+  <div class="stag stag-green">إشعارات واتساب</div>
+  <h2 class="sec-h">ولي الأمر يعرف قبل أن يسأل</h2>
+  <p class="sec-p">رسائل آلية فورية لأولياء الأمور عند الغياب والتأخر وصعود الباص — بدون أي تدخل يدوي.</p>
+
+  <div class="three" style="margin-top:32px">
+    <div>
+      <p style="text-align:center;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:12px">رسالة الغياب</p>
+      <div class="wa-phone">
+        <div class="wa-bar">💬 مدرسة الدرب الثانوية</div>
+        <div class="wa-body">
+          <div class="wa-msg">
+            <strong>مدرسة الدرب الثانوية 🏫</strong><br><br>
+            السلام عليكم ورحمة الله<br><br>
+            نُحيطكم علماً بأن ابنكم<br>
+            <strong>الطالب / ░░░░░░░</strong><br>
+            الصف: الثالث — أ<br><br>
+            <span style="color:#dc2626;font-weight:700">❌ غائب اليوم</span><br>
+            الثلاثاء 28/05/2026
+            <div class="wa-time">7:45 ص ✓✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p style="text-align:center;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:12px">رسالة التأخر</p>
+      <div class="wa-phone">
+        <div class="wa-bar">💬 مدرسة الدرب الثانوية</div>
+        <div class="wa-body">
+          <div class="wa-msg">
+            <strong>مدرسة الدرب الثانوية 🏫</strong><br><br>
+            ولي أمر / <strong>░░░░░░░</strong><br><br>
+            <span style="color:#d97706;font-weight:700">⏰ تأخّر في الحضور</span><br>
+            وصل الساعة: <strong>07:52 ص</strong><br>
+            الثلاثاء 28/05/2026<br><br>
+            نأمل الحرص على الالتزام
+            <div class="wa-time">7:53 ص ✓✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p style="text-align:center;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:12px">إشعار الباص</p>
+      <div class="wa-phone">
+        <div class="wa-bar">💬 مدرسة الدرب الثانوية</div>
+        <div class="wa-body">
+          <div class="wa-msg">
+            <strong>مدرسة الدرب الثانوية 🏫</strong><br><br>
+            ولي أمر / <strong>░░░░░░░</strong><br><br>
+            <span style="color:#16a34a;font-weight:700">🚌 صعد ابنكم الباص</span><br>
+            باص: الحي الشمالي<br>
+            الوقت: <strong>06:42 ص</strong>
+            <div class="wa-time">6:42 ص ✓✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="feat-cards" style="margin-top:28px">
+    <div class="fc"><div class="i">⚡</div><div class="t">إرسال آلي فوري</div><div class="d">يُرسَل دون تدخل يدوي فور الحفظ</div></div>
+    <div class="fc"><div class="i">🎯</div><div class="t">إرسال انتقائي</div><div class="d">أرسل لفصل بعينه أو طالب محدد</div></div>
+    <div class="fc"><div class="i">🔄</div><div class="t">استئناف تلقائي</div><div class="d">يعيد الاتصال عند انقطاع الواتساب</div></div>
+    <div class="fc"><div class="i">📅</div><div class="t">جدولة يومية</div><div class="d">إرسال تقارير يومية موقوتة</div></div>
+  </div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════ 5. BUS ══════════ -->
+<section class="section" id="bus" style="background:white">
+<div class="section-inner reveal">
+  <div class="two" style="align-items:start;gap:48px">
+    <div>
+      <div class="stag" style="background:#fef3c7;color:#d97706">إدارة الباصات</div>
+      <h2 class="sec-h">تتبّع الباصات لحظةً بلحظة</h2>
+      <p class="sec-p">السائق يفتح رابطاً على هاتفه — يضغط ✅ صعد — ويصل واتساب لولي الأمر فوراً.</p>
+
+      <div class="mockup" style="margin-top:20px">
+        <div class="mockup-bar">🚌 الباصات المدرسية</div>
+        <div class="mockup-body" style="padding:10px">
+          <div class="bus-card">
+            <span style="font-size:30px">🚌</span>
+            <div style="flex:1">
+              <div style="font-size:14px;font-weight:700;color:var(--navy)">باص الحي الشمالي</div>
+              <div style="font-size:12px;color:var(--muted)">السائق: ░░░░░░░ | 28 طالب</div>
+            </div>
+            <span class="bus-sts" style="background:#dcfce7;color:#16a34a">🟢 في الطريق</span>
+          </div>
+          <div class="bus-card">
+            <span style="font-size:30px">🚌</span>
+            <div style="flex:1">
+              <div style="font-size:14px;font-weight:700;color:var(--navy)">باص الحي الجنوبي</div>
+              <div style="font-size:12px;color:var(--muted)">السائق: ░░░░░░░ | 32 طالب</div>
+            </div>
+            <span class="bus-sts" style="background:#fef3c7;color:#d97706">🟡 جارٍ التحميل</span>
+          </div>
+          <div class="bus-card">
+            <span style="font-size:30px">🚌</span>
+            <div style="flex:1">
+              <div style="font-size:14px;font-weight:700;color:var(--navy)">باص الحي الشرقي</div>
+              <div style="font-size:12px;color:var(--muted)">السائق: ░░░░░░░ | 25 طالب</div>
+            </div>
+            <span class="bus-sts" style="background:#f1f5f9;color:#64748b">⚪ لم يبدأ</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <p style="text-align:center;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:12px">تطبيق السائق (رابط على الهاتف)</p>
+      <div class="phone">
+        <div class="ph-bar">🚌 باص الحي الشمالي<br><small>الرحلة الصباحية</small></div>
+        <div class="ph-body">
+          <div style="background:white;border-radius:8px;padding:8px;margin-bottom:8px;border:1px solid var(--border)">
+            <div style="font-size:11px;font-weight:700;margin-bottom:6px;color:var(--navy)">قائمة الطلاب</div>
+            <div style="font-size:11px;padding:5px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+              <span class="blur" style="min-width:60px;font-size:10px">xxxxxxx</span>
+              <span style="color:#16a34a;font-weight:700;font-size:11px">✅ صعد</span>
+            </div>
+            <div style="font-size:11px;padding:5px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+              <span class="blur" style="min-width:60px;font-size:10px">xxxxxxx</span>
+              <span style="color:#dc2626;font-weight:700;font-size:11px">❌ لم يصعد</span>
+            </div>
+            <div style="font-size:11px;padding:5px 0;display:flex;justify-content:space-between;align-items:center">
+              <span class="blur" style="min-width:60px;font-size:10px">xxxxxxx</span>
+              <span style="color:#94a3b8;font-size:11px">انتظار…</span>
+            </div>
+          </div>
+          <div class="ph-btn" style="background:#16a34a;font-size:11px">✅ تأكيد الصعود</div>
+          <div style="font-size:10px;text-align:center;color:#16a34a;background:#dcfce7;padding:5px;border-radius:6px">
+            📲 يُرسَل واتساب لولي الأمر فوراً
+          </div>
+        </div>
+      </div>
+
+      <div class="benefit" style="margin-top:14px">
+        <span style="font-size:18px">💡</span>
+        <ul>
+          <li>لا يحتاج السائق تثبيت تطبيق</li>
+          <li>جدولة آلية للرسائل الصباحية والمسائية</li>
+          <li>تحكم في إشعارات الأولياء من الإعدادات</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════ 6. PARENT PORTAL ══════════ -->
+<section class="section" style="background:var(--bg)">
+<div class="section-inner reveal">
+  <div class="stag stag-purple">بوابة أولياء الأمور</div>
+  <h2 class="sec-h">ولي الأمر شريك لا مُتلقٍّ</h2>
+  <p class="sec-p">يفتح ولي الأمر البوابة من رابط واتساب — يرى سجل ابنه، يقدم عذراً، أو يطلب استئذاناً — كل ذلك من هاتفه.</p>
+
+  <div class="three" style="margin-top:32px">
+    <div>
+      <p style="text-align:center;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:12px">الصفحة الرئيسية</p>
+      <div class="phone">
+        <div class="ph-bar">🏫 بوابة أولياء الأمور</div>
+        <div class="ph-body">
+          <div style="background:#f0fdf4;border-radius:8px;padding:8px;margin-bottom:8px;border:1px solid #bbf7d0">
+            <div style="font-size:11px;font-weight:700;color:#166534;margin-bottom:4px">ابنكم الكريم</div>
+            <div class="blur" style="font-size:12px;min-width:100px">xxxxxxxxxx</div>
+            <div style="font-size:10px;color:var(--muted)">الصف الثالث — أ</div>
+          </div>
+          <div class="ph-btn" style="background:var(--blue);font-size:11px">📊 سجل الغياب والتأخر</div>
+          <div class="ph-btn" style="background:#059669;font-size:11px">📝 تقديم عذر</div>
+          <div class="ph-btn" style="background:#7c3aed;font-size:11px">🚪 طلب استئذان</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p style="text-align:center;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:12px">تقديم عذر</p>
+      <div class="phone">
+        <div class="ph-bar">📝 تقديم عذر غياب</div>
+        <div class="ph-body">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">تاريخ الغياب</div>
+          <div style="border:1px solid var(--border);border-radius:6px;padding:6px;font-size:11px;margin-bottom:8px;background:white">28/05/2026</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">السبب</div>
+          <div style="border:1px solid var(--border);border-radius:6px;padding:8px;font-size:11px;margin-bottom:8px;background:white;min-height:44px">مراجعة طبية</div>
+          <div style="border:2px dashed var(--border);border-radius:6px;padding:8px;text-align:center;font-size:10px;color:#94a3b8;margin-bottom:8px">📎 إرفاق صورة</div>
+          <div class="ph-btn" style="background:#059669;font-size:11px">✅ إرسال العذر</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p style="text-align:center;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:12px">طلب استئذان</p>
+      <div class="phone">
+        <div class="ph-bar">🚪 طلب استئذان</div>
+        <div class="ph-body">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">وقت الاستئذان</div>
+          <div style="border:1px solid var(--border);border-radius:6px;padding:6px;font-size:11px;margin-bottom:8px;background:white">10:30 ص</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">السبب</div>
+          <div style="border:1px solid var(--border);border-radius:6px;padding:8px;font-size:11px;margin-bottom:8px;background:white;min-height:40px">موعد طبي عاجل</div>
+          <div class="ph-btn" style="background:#7c3aed;font-size:11px">📤 إرسال</div>
+          <div style="background:#dcfce7;border-radius:6px;padding:5px;font-size:10px;color:#16a34a;text-align:center;margin-top:6px">✅ قُبِل طلبك — 27/05</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════ 7. REPORTS ══════════ -->
+<section class="section" id="reports" style="background:white">
+<div class="section-inner reveal">
+  <div class="stag">التقارير والتحليلات</div>
+  <h2 class="sec-h">تقارير شاملة — في ثوانٍ</h2>
+  <p class="sec-p">من تحليل مسيرة طالب بعينه إلى تصدير ملف نور — كل شيء جاهز بضغطة زر.</p>
+  <div class="feat-cards" style="margin-top:24px;grid-template-columns:repeat(3,1fr)">
+    <div class="fc"><div class="i">👤</div><div class="t">تحليل طالب</div><div class="d">رسم بياني لكامل مسيرة الطالب منذ بداية العام</div></div>
+    <div class="fc"><div class="i">📄</div><div class="t">تقرير الفصل</div><div class="d">جميع طلاب الفصل خلال فترة محددة</div></div>
+    <div class="fc"><div class="i">🏫</div><div class="t">تقرير الإدارة</div><div class="d">ملخص شامل لجميع الصفوف والفصول</div></div>
+    <div class="fc"><div class="i">🔝</div><div class="t">أكثر الطلاب غياباً</div><div class="d">قائمة ترتيبية بأعلى معدلات الغياب</div></div>
+    <div class="fc"><div class="i">📤</div><div class="t">تصدير نور</div><div class="d">ملف الغياب بصيغة نظام نور مباشرةً</div></div>
+    <div class="fc"><div class="i">🖨️</div><div class="t">طباعة جاهزة</div><div class="d">تقارير مُهيَّأة للطباعة الفورية</div></div>
+  </div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════ 8. ROLES ══════════ -->
+<section class="section" id="roles" style="background:var(--bg)">
+<div class="section-inner reveal">
+  <div class="stag stag-purple">الأدوار والصلاحيات</div>
+  <h2 class="sec-h">لكل منسوب دوره الدقيق</h2>
+  <p class="sec-p">8 أدوار مختلفة — كل مستخدم يرى فقط التبويبات المخصصة لوظيفته.</p>
+  <div class="roles">
+    <div class="role" style="background:#7c3aed"><div class="ri">👑</div><div class="rt">مدير المدرسة</div><div class="rd">صلاحيات كاملة على كل شيء</div></div>
+    <div class="role" style="background:#1d4ed8"><div class="ri">🏛️</div><div class="rt">الوكيل</div><div class="rd">جميع المهام الإدارية والتقارير</div></div>
+    <div class="role" style="background:#2563eb"><div class="ri">📋</div><div class="rt">الإداري</div><div class="rd">التسجيل والمتابعة اليومية</div></div>
+    <div class="role" style="background:#059669"><div class="ri">🤝</div><div class="rt">الموجّه الطلابي</div><div class="rd">متابعة الحالات والتقارير</div></div>
+    <div class="role" style="background:#065f46"><div class="ri">📚</div><div class="rt">المعلم</div><div class="rd">تحويل الطلاب والنماذج</div></div>
+    <div class="role" style="background:#0891b2"><div class="ri">🔬</div><div class="rt">المحضر</div><div class="rd">النماذج والتعاميم</div></div>
+    <div class="role" style="background:#d97706"><div class="ri">🎭</div><div class="rt">رائد النشاط</div><div class="rd">التعاميم ولوحة النقاط</div></div>
+    <div class="role" style="background:#92400e"><div class="ri">🛡️</div><div class="rt">الحارس</div><div class="rd">تسجيل التأخر عند البوابة</div></div>
+  </div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════ 9. COMPARE ══════════ -->
+<section class="section" style="background:white">
+<div class="section-inner reveal">
+  <div class="two" style="gap:48px;align-items:start">
+    <div>
+      <div class="stag">لماذا دَرب؟</div>
+      <h2 class="sec-h">قبل وبعد</h2>
+      <p class="sec-p">الفرق الذي يصنعه دَرب في العمل اليومي للمدرسة.</p>
+      <table class="cmp" style="margin-top:20px">
+        <tr><th>التحدي</th><th>بدون دَرب</th><th>مع دَرب ✅</th></tr>
+        <tr><td>تسجيل الغياب</td><td class="no">ورقي — بطيء</td><td class="yes">رقمي — 3 نقرات</td></tr>
+        <tr><td>إشعار الأولياء</td><td class="no">مكالمة يدوية</td><td class="yes">واتساب تلقائي</td></tr>
+        <tr><td>تقارير الغياب</td><td class="no">ساعات في الإكسل</td><td class="yes">فورية بضغطة</td></tr>
+        <tr><td>متابعة الباصات</td><td class="no">لا توجد</td><td class="yes">لحظية + واتساب</td></tr>
+        <tr><td>تصدير نور</td><td class="no">إدخال يدوي</td><td class="yes">ملف جاهز تلقائياً</td></tr>
+        <tr><td>التواصل الداخلي</td><td class="no">جماعات واتساب</td><td class="yes">منصة متكاملة</td></tr>
+      </table>
+    </div>
+    <div>
+      <div class="stag stag-green">المتطلبات</div>
+      <h2 class="sec-h">بسيط في التثبيت</h2>
+      <p class="sec-p">يعمل على حاسب عادي في المدرسة — لا سيرفر خاص ولا تقنيات معقدة.</p>
+      <div class="feat-cards" style="grid-template-columns:1fr 1fr;margin-top:20px">
+        <div class="fc"><div class="i">💻</div><div class="t">حاسب واحد</div><div class="d">يعمل على أي حاسب مكتبي</div></div>
+        <div class="fc"><div class="i">🌐</div><div class="t">إنترنت عادي</div><div class="d">خط المدرسة يكفي</div></div>
+        <div class="fc"><div class="i">📱</div><div class="t">أي هاتف</div><div class="d">للمعلمين من متصفح الهاتف</div></div>
+        <div class="fc"><div class="i">🔄</div><div class="t">تحديث تلقائي</div><div class="d">تحديثات من داخل البرنامج</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-block">
+    <div style="font-size:36px;margin-bottom:10px">🏫</div>
+    <h3>نظام دَرب — مُطبَّق في مدارس حقيقية</h3>
+    <p>مفتوح المصدر · تحديثات مستمرة · مجاني تماماً</p>
+    <div class="cta-btns">
+      <a href="https://github.com/moon15mm/DarbStu" target="_blank" class="cta-btn cta-btn-solid">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        عرض الكود على GitHub
+      </a>
+      <a href="../index.html" class="cta-btn">🔙 العودة للمشاريع</a>
+    </div>
+  </div>
+</div>
+</section>
+
+<footer>
+  <p>نظام <span>دَرب</span> — الإصدار 3.6.7 | © 2026 ماهر</p>
+</footer>
+
+<script>
+// Progress bar
+window.addEventListener('scroll',function(){
+  var s=document.documentElement.scrollTop||document.body.scrollTop;
+  var h=document.documentElement.scrollHeight-document.documentElement.clientHeight;
+  document.getElementById('progress-bar').style.width=(s/h*100)+'%';
+});
+
+// Reveal on scroll
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el);});
+</script>
+</body>
+</html>
