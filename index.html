@@ -23,6 +23,46 @@ body{font-family:'Cairo','Tahoma',Arial,sans-serif;background:var(--bg0);color:v
 ::-webkit-scrollbar-track{background:var(--bg0)}
 ::-webkit-scrollbar-thumb{background:linear-gradient(var(--blue),var(--purple));border-radius:3px}
 
+/* ══ ICON ANIMATIONS ══ */
+@keyframes iconFloat{
+  0%,100%{transform:translateY(0) scale(1)}
+  50%{transform:translateY(-8px) scale(1.1)}
+}
+@keyframes iconBounce{
+  0%,100%{transform:translateY(0)}
+  30%{transform:translateY(-10px)}
+  60%{transform:translateY(-4px)}
+}
+@keyframes iconSpin{
+  0%{transform:rotateY(0deg)}
+  100%{transform:rotateY(360deg)}
+}
+@keyframes iconWobble{
+  0%,100%{transform:rotate(0deg)}
+  20%{transform:rotate(-8deg)}
+  40%{transform:rotate(8deg)}
+  60%{transform:rotate(-5deg)}
+  80%{transform:rotate(5deg)}
+}
+@keyframes iconPop{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.25)}
+  100%{transform:scale(1)}
+}
+@keyframes iconOrbit{
+  0%,100%{transform:translateY(0) rotate(0deg) scale(1)}
+  25%{transform:translateY(-6px) rotate(5deg) scale(1.08)}
+  75%{transform:translateY(-3px) rotate(-5deg) scale(0.95)}
+}
+
+.ic{display:inline-block}
+.ic-float{animation:iconFloat 3s ease-in-out infinite}
+.ic-bounce{animation:iconBounce 2.5s ease-in-out infinite}
+.ic-wobble{animation:iconWobble 2s ease-in-out infinite}
+.ic-spin{animation:iconSpin 4s ease-in-out infinite}
+.ic-pop{animation:iconPop 2s ease-in-out infinite}
+.ic-orbit{animation:iconOrbit 4s ease-in-out infinite}
+
 /* ══ NAVBAR ══ */
 nav{
   position:fixed;top:0;right:0;left:0;z-index:200;
@@ -64,11 +104,11 @@ nav{
   background:radial-gradient(ellipse at 50% 0%,#0d1f4a 0%,var(--bg0) 70%);
 }
 /* animated gradient orbs */
-.orb{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none}
-.orb-1{width:500px;height:500px;background:#1e1b6b;top:-120px;right:-120px;animation:floatOrb 10s ease-in-out infinite}
-.orb-2{width:400px;height:400px;background:#0c4a6e;bottom:-80px;left:-80px;animation:floatOrb 13s ease-in-out infinite reverse}
-.orb-3{width:300px;height:300px;background:#1a0533;top:40%;left:55%;animation:floatOrb 8s ease-in-out infinite 2s}
-.orb-4{width:200px;height:200px;background:#0f3460;top:20%;right:30%;animation:floatOrb 11s ease-in-out infinite 4s}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;opacity:.9}
+.orb-1{width:550px;height:550px;background:rgba(29,78,216,.5);top:-150px;right:-150px;animation:floatOrb 10s ease-in-out infinite}
+.orb-2{width:450px;height:450px;background:rgba(12,74,110,.6);bottom:-100px;left:-100px;animation:floatOrb 13s ease-in-out infinite reverse}
+.orb-3{width:320px;height:320px;background:rgba(124,58,237,.45);top:40%;left:55%;animation:floatOrb 8s ease-in-out infinite 2s}
+.orb-4{width:240px;height:240px;background:rgba(15,52,96,.7);top:20%;right:30%;animation:floatOrb 11s ease-in-out infinite 4s}
 @keyframes floatOrb{
   0%,100%{transform:translate(0,0) scale(1)}
   33%{transform:translate(40px,-30px) scale(1.06)}
@@ -77,8 +117,13 @@ nav{
 /* grid dots overlay */
 .hero-grid{
   position:absolute;inset:0;
-  background-image:radial-gradient(rgba(96,165,250,.07) 1px,transparent 1px);
+  background-image:radial-gradient(rgba(96,165,250,.1) 1px,transparent 1px);
   background-size:36px 36px;
+  animation:gridPulse 4s ease-in-out infinite;
+}
+@keyframes gridPulse{
+  0%,100%{opacity:.5}
+  50%{opacity:1}
 }
 .hero-inner{position:relative;z-index:1;max-width:760px}
 .hero-eyebrow{
@@ -89,14 +134,20 @@ nav{
   backdrop-filter:blur(10px);
 }
 .hero-name{
-  font-size:clamp(48px,8vw,82px);font-weight:900;line-height:1.1;margin-bottom:16px;
+  font-size:clamp(52px,9vw,90px);font-weight:900;line-height:1.1;margin-bottom:16px;
   color:white;
-  text-shadow:0 0 60px rgba(96,165,250,.3);
+  text-shadow:0 0 80px rgba(34,211,238,.25);
 }
 .hero-name .grad{
   background:linear-gradient(135deg,var(--cyan) 0%,var(--accent) 40%,var(--purple) 100%);
+  background-size:200% auto;
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
   display:block;
+  animation:gradShift 4s linear infinite;
+}
+@keyframes gradShift{
+  0%{background-position:0% center}
+  100%{background-position:200% center}
 }
 .tw-cursor{
   color:var(--cyan);font-weight:300;
@@ -126,12 +177,27 @@ nav{
   color:white;backdrop-filter:blur(10px);
 }
 .btn-glass:hover{background:rgba(255,255,255,.12)}
+
 /* mini stats strip */
 .hero-stats{display:flex;gap:40px;justify-content:center;flex-wrap:wrap}
 .hs{text-align:center}
-.hs-num{font-size:30px;font-weight:900;background:linear-gradient(135deg,var(--cyan),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hs-num{
+  font-size:32px;font-weight:900;
+  background:linear-gradient(135deg,var(--cyan),var(--accent));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  text-shadow:none;
+  position:relative;
+}
+.hs-num::after{
+  content:attr(data-display);
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,var(--cyan),var(--accent));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:blur(8px);opacity:.5;
+}
 .hs-lbl{font-size:12px;color:var(--muted)}
 .hero-divider{width:1px;height:40px;background:var(--border);align-self:center}
+
 /* scroll hint */
 .scroll-hint{
   position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
@@ -161,9 +227,16 @@ nav{
   background:var(--glass);border:1px solid var(--border);border-radius:8px;
   padding:10px 14px;font-size:13px;font-weight:600;color:var(--text);
   display:flex;align-items:center;gap:8px;
-  backdrop-filter:blur(10px);transition:border-color .2s,background .2s;
+  backdrop-filter:blur(10px);transition:border-color .2s,background .2s,transform .2s;
+  cursor:default;
 }
-.skill-chip:hover{border-color:rgba(34,211,238,.3);background:rgba(34,211,238,.06)}
+.skill-chip:hover{
+  border-color:rgba(34,211,238,.3);
+  background:rgba(34,211,238,.06);
+  transform:translateY(-2px);
+}
+.skill-chip:hover .ic{animation:iconWobble .5s ease}
+
 .about-card{
   background:linear-gradient(135deg,rgba(29,78,216,.2),rgba(167,139,250,.15));
   border:1px solid rgba(167,139,250,.2);border-radius:20px;
@@ -184,8 +257,22 @@ nav{
 }
 .ac-lbl{font-size:14px;color:var(--muted);margin-bottom:24px}
 .ac-div{height:1px;background:rgba(255,255,255,.1);margin:16px 0}
-.ac-list{font-size:13px;color:rgba(255,255,255,.75);line-height:2.1;text-align:right}
-.ac-list span{color:var(--cyan);font-weight:700}
+.ac-list{font-size:13px;color:rgba(255,255,255,.75);line-height:2.3;text-align:right}
+.ac-list .ic{margin-left:4px}
+
+/* ══ STAT COUNTERS (About section) ══ */
+.about-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}
+.astat{
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:12px;padding:16px 10px;text-align:center;
+  backdrop-filter:blur(10px);
+}
+.astat-num{
+  font-size:28px;font-weight:900;
+  background:linear-gradient(135deg,var(--cyan),var(--purple));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.astat-lbl{font-size:11px;color:var(--muted);margin-top:2px}
 
 /* ══ PROJECTS ══ */
 #projects{
@@ -199,40 +286,49 @@ nav{
 }
 .proj-inner{max-width:1100px;margin:0 auto;position:relative}
 
-/* featured card */
+/* animated border card */
+.project-card-wrap{
+  margin-top:48px;margin-bottom:32px;
+  position:relative;border-radius:26px;
+  padding:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--purple),var(--pink),var(--cyan));
+  background-size:300% 100%;
+  animation:borderFlow 4s linear infinite;
+  box-shadow:0 0 40px rgba(34,211,238,.15);
+}
+@keyframes borderFlow{
+  0%{background-position:0% 50%}
+  100%{background-position:300% 50%}
+}
 .project-card{
-  background:rgba(255,255,255,.03);
-  backdrop-filter:blur(20px);
-  border:1px solid rgba(255,255,255,.08);
+  background:#080d1a;
   border-radius:24px;overflow:hidden;
   display:grid;grid-template-columns:1fr 1fr;
-  margin-top:48px;margin-bottom:32px;
   position:relative;
-  transition:transform .35s,box-shadow .35s;
-  box-shadow:0 0 0 1px rgba(96,165,250,.07),0 24px 64px rgba(0,0,0,.4);
+  transition:transform .35s;
 }
-.project-card::before{
-  content:'';position:absolute;inset:0;border-radius:24px;
-  background:linear-gradient(135deg,rgba(34,211,238,.04) 0%,rgba(167,139,250,.04) 100%);
-  pointer-events:none;
-}
-.project-card:hover{transform:translateY(-6px);box-shadow:0 0 0 1px rgba(34,211,238,.18),0 32px 80px rgba(0,0,0,.5),0 0 80px rgba(34,211,238,.06)}
+.project-card:hover{transform:scale(1.01)}
 @media(max-width:768px){.project-card{grid-template-columns:1fr}}
 
 /* card visual */
 .pc-visual{
   padding:52px 44px;
-  background:linear-gradient(145deg,rgba(15,31,61,.9),rgba(29,78,216,.25));
+  background:linear-gradient(145deg,rgba(15,31,61,.95),rgba(29,78,216,.3));
   position:relative;overflow:hidden;
   display:flex;flex-direction:column;justify-content:center;
 }
 .pc-visual::after{
   content:'';position:absolute;
   width:320px;height:320px;border-radius:50%;
-  background:radial-gradient(circle,rgba(34,211,238,.08) 0%,transparent 70%);
+  background:radial-gradient(circle,rgba(34,211,238,.1) 0%,transparent 70%);
   bottom:-100px;left:-60px;
+  animation:glowPulse 3s ease-in-out infinite;
 }
-.pc-icon{font-size:60px;margin-bottom:16px;position:relative;z-index:1}
+@keyframes glowPulse{
+  0%,100%{opacity:.5;transform:scale(1)}
+  50%{opacity:1;transform:scale(1.15)}
+}
+.pc-icon{font-size:64px;margin-bottom:16px;position:relative;z-index:1;display:inline-block;animation:iconOrbit 4s ease-in-out infinite}
 .pc-name{
   font-size:36px;font-weight:900;position:relative;z-index:1;margin-bottom:8px;
   background:linear-gradient(135deg,white 40%,var(--accent));
@@ -248,7 +344,9 @@ nav{
 .pc-tag{
   background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
   border-radius:6px;padding:4px 12px;font-size:12px;color:rgba(255,255,255,.8);font-weight:600;
+  transition:border-color .2s,background .2s;
 }
+.pc-tag:hover{border-color:var(--cyan);background:rgba(34,211,238,.1);color:var(--cyan)}
 
 /* card info */
 .pc-info{padding:44px 40px;display:flex;flex-direction:column;justify-content:center}
@@ -258,13 +356,31 @@ nav{
   border-radius:20px;padding:5px 16px;font-size:12px;color:var(--green);
   font-weight:700;margin-bottom:18px;
 }
-.pc-live::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+.pc-live::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;flex-shrink:0}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,.5)}50%{box-shadow:0 0 0 5px rgba(16,185,129,0)}}
 .pc-title{font-size:22px;font-weight:900;color:white;margin-bottom:12px}
 .pc-desc{font-size:14px;color:var(--muted);line-height:1.85;margin-bottom:22px}
 .pc-feats{list-style:none;margin-bottom:28px}
-.pc-feats li{font-size:13px;color:var(--text);padding:5px 0;display:flex;align-items:flex-start;gap:8px}
-.pc-feats li::before{content:"✓";color:var(--cyan);font-weight:900;flex-shrink:0}
+.pc-feats li{
+  font-size:13px;color:var(--text);padding:6px 0;
+  display:flex;align-items:flex-start;gap:8px;
+  border-bottom:1px solid rgba(255,255,255,.04);
+  transition:padding-right .2s;
+}
+.pc-feats li:hover{padding-right:6px}
+.pc-feats li::before{
+  content:"✓";color:var(--cyan);font-weight:900;flex-shrink:0;
+  animation:checkPop 2.5s ease-in-out infinite;
+}
+.pc-feats li:nth-child(2)::before{animation-delay:.4s}
+.pc-feats li:nth-child(3)::before{animation-delay:.8s}
+.pc-feats li:nth-child(4)::before{animation-delay:1.2s}
+.pc-feats li:nth-child(5)::before{animation-delay:1.6s}
+@keyframes checkPop{
+  0%,80%,100%{transform:scale(1);color:var(--cyan)}
+  90%{transform:scale(1.4);color:#fff}
+}
+
 .pc-actions{display:flex;gap:10px;flex-wrap:wrap}
 .btn-sm{
   padding:10px 22px;font-size:13px;border-radius:8px;
@@ -289,9 +405,11 @@ nav{
 .coming-card:hover{
   border-color:rgba(167,139,250,.3);
   background:rgba(167,139,250,.05);
-  transform:translateY(-3px);
+  transform:translateY(-4px);
 }
-.cc-icon{font-size:36px;margin-bottom:12px;opacity:.4}
+.coming-card:hover .cc-icon{animation:iconBounce .6s ease}
+.cc-icon{font-size:36px;margin-bottom:12px;display:inline-block;opacity:.55;transition:opacity .3s}
+.coming-card:hover .cc-icon{opacity:1}
 .cc-title{font-size:15px;font-weight:700;color:rgba(255,255,255,.5);margin-bottom:6px}
 .cc-desc{font-size:13px;color:var(--muted);line-height:1.6}
 .cc-soon{
@@ -331,6 +449,8 @@ nav{
   transform:translateY(-3px);
   box-shadow:0 0 20px rgba(34,211,238,.15);
 }
+.clink .ic{transition:transform .3s}
+.clink:hover .ic{animation:iconWobble .5s ease}
 
 /* ══ FOOTER ══ */
 footer{
@@ -373,7 +493,7 @@ footer span{
   <div class="hero-grid"></div>
 
   <div class="hero-inner">
-    <div class="hero-eyebrow">🚀 مطوّر برمجيات</div>
+    <div class="hero-eyebrow"><span class="ic ic-bounce">🚀</span> مطوّر برمجيات</div>
     <h1 class="hero-name">
       ماهر
       <span class="grad" id="tw-text"> </span><span class="tw-cursor">|</span>
@@ -383,15 +503,24 @@ footer span{
       من إدارة المدارس إلى أتمتة العمليات المؤسسية
     </p>
     <div class="hero-btns">
-      <a href="#projects" class="btn btn-glow">🗂️ تصفّح المشاريع</a>
-      <a href="#contact" class="btn btn-glass">📬 تواصل معي</a>
+      <a href="#projects" class="btn btn-glow"><span class="ic ic-float">🗂️</span> تصفّح المشاريع</a>
+      <a href="#contact" class="btn btn-glass"><span class="ic ic-wobble">📬</span> تواصل معي</a>
     </div>
     <div class="hero-stats">
-      <div class="hs"><div class="hs-num" id="h-proj">1</div><div class="hs-lbl">مشروع مُطبَّق</div></div>
+      <div class="hs">
+        <div class="hs-num" data-target="1" data-suffix="" data-display="1">1</div>
+        <div class="hs-lbl">مشروع مُطبَّق</div>
+      </div>
       <div class="hero-divider"></div>
-      <div class="hs"><div class="hs-num" id="h-ver">3.6.7</div><div class="hs-lbl">آخر إصدار</div></div>
+      <div class="hs">
+        <div class="hs-num" id="h-ver">3.6.7</div>
+        <div class="hs-lbl">آخر إصدار</div>
+      </div>
       <div class="hero-divider"></div>
-      <div class="hs"><div class="hs-num" id="h-stu">847+</div><div class="hs-lbl">طالب مُسجَّل</div></div>
+      <div class="hs">
+        <div class="hs-num" data-target="847" data-suffix="+" data-display="847+">847+</div>
+        <div class="hs-lbl">طالب مُسجَّل</div>
+      </div>
     </div>
   </div>
   <div class="scroll-hint">
@@ -404,16 +533,30 @@ footer span{
 <section id="about">
   <div class="about-grid">
     <div class="reveal">
-      <div class="sec-tag">✦ من أنا</div>
+      <div class="sec-tag"><span class="ic ic-spin">✦</span> من أنا</div>
       <h2 class="sec-h">مطوّر متخصص في<br>حلول التعليم والإدارة</h2>
       <p class="sec-p">أعمل على تطوير برمجيات مخصصة تعالج تحديات حقيقية في القطاع التعليمي السعودي — كل مشروع يبدأ من تجربة ميدانية حقيقية وينتهي بحل عملي قابل للتطبيق.</p>
       <div class="skills-grid">
-        <div class="skill-chip">🐍 Python / FastAPI</div>
-        <div class="skill-chip">🌐 HTML / CSS / JS</div>
-        <div class="skill-chip">🗄️ SQLite / JSON</div>
-        <div class="skill-chip">📲 WhatsApp API</div>
-        <div class="skill-chip">🖥️ Tkinter GUI</div>
-        <div class="skill-chip">☁️ Cloudflare Tunnel</div>
+        <div class="skill-chip"><span class="ic">🐍</span> Python / FastAPI</div>
+        <div class="skill-chip"><span class="ic">🌐</span> HTML / CSS / JS</div>
+        <div class="skill-chip"><span class="ic">🗄️</span> SQLite / JSON</div>
+        <div class="skill-chip"><span class="ic">📲</span> WhatsApp API</div>
+        <div class="skill-chip"><span class="ic">🖥️</span> Tkinter GUI</div>
+        <div class="skill-chip"><span class="ic">☁️</span> Cloudflare Tunnel</div>
+      </div>
+      <div class="about-stats">
+        <div class="astat">
+          <div class="astat-num" data-target="8" data-suffix="">8</div>
+          <div class="astat-lbl">أدوار وصلاحيات</div>
+        </div>
+        <div class="astat">
+          <div class="astat-num" data-target="30" data-suffix="+">30+</div>
+          <div class="astat-lbl">تبويب وظيفي</div>
+        </div>
+        <div class="astat">
+          <div class="astat-num" data-target="2" data-suffix=" سنة">2 سنة</div>
+          <div class="astat-lbl">تطوير مستمر</div>
+        </div>
       </div>
     </div>
     <div class="reveal">
@@ -422,11 +565,11 @@ footer span{
         <div class="ac-lbl">آخر إصدار منشور</div>
         <div class="ac-div"></div>
         <div class="ac-list">
-          <span>✅</span> تحديثات مستمرة ودعم فني<br>
-          <span>✅</span> مُختبَر في بيئة حقيقية<br>
-          <span>✅</span> متوافق مع نظام نور<br>
-          <span>✅</span> إشعارات واتساب تلقائية<br>
-          <span>✅</span> واجهة ويب وتطبيق سطح مكتب
+          <span class="ic ic-pop">✅</span> تحديثات مستمرة ودعم فني<br>
+          <span class="ic ic-pop" style="animation-delay:.3s">✅</span> مُختبَر في بيئة حقيقية<br>
+          <span class="ic ic-pop" style="animation-delay:.6s">✅</span> متوافق مع نظام نور<br>
+          <span class="ic ic-pop" style="animation-delay:.9s">✅</span> إشعارات واتساب تلقائية<br>
+          <span class="ic ic-pop" style="animation-delay:1.2s">✅</span> واجهة ويب وتطبيق سطح مكتب
         </div>
       </div>
     </div>
@@ -437,38 +580,40 @@ footer span{
 <section id="projects">
   <div class="proj-inner">
     <div class="reveal">
-      <div class="sec-tag">✦ المشاريع</div>
+      <div class="sec-tag"><span class="ic ic-spin">✦</span> المشاريع</div>
       <h2 class="sec-h">ما بنيته حتى الآن</h2>
       <p class="sec-p" style="color:var(--muted)">برمجيات مجرّبة ميدانياً تعمل في مدارس حقيقية</p>
     </div>
 
     <!-- DarbStu -->
-    <div class="project-card reveal">
-      <div class="pc-visual">
-        <div class="pc-icon">🏫</div>
-        <div class="pc-name">نظام دَرب</div>
-        <div class="pc-ver">v3.6.7 — 2026</div>
-        <div class="pc-tags">
-          <span class="pc-tag">Python</span>
-          <span class="pc-tag">FastAPI</span>
-          <span class="pc-tag">WhatsApp</span>
-          <span class="pc-tag">SQLite</span>
+    <div class="project-card-wrap reveal">
+      <div class="project-card">
+        <div class="pc-visual">
+          <div class="pc-icon">🏫</div>
+          <div class="pc-name">نظام دَرب</div>
+          <div class="pc-ver">v3.6.7 — 2026</div>
+          <div class="pc-tags">
+            <span class="pc-tag">Python</span>
+            <span class="pc-tag">FastAPI</span>
+            <span class="pc-tag">WhatsApp</span>
+            <span class="pc-tag">SQLite</span>
+          </div>
         </div>
-      </div>
-      <div class="pc-info">
-        <div class="pc-live">مُطبَّق ومُشغَّل الآن</div>
-        <h3 class="pc-title">نظام دَرب لإدارة شؤون الطلاب</h3>
-        <p class="pc-desc">حل شامل لمتابعة الغياب والتأخر، وإشعار أولياء الأمور تلقائياً عبر واتساب، وإدارة الباصات المدرسية — مُطوَّر من تجربة ميدانية حقيقية.</p>
-        <ul class="pc-feats">
-          <li>تسجيل الغياب والتأخر من أي هاتف</li>
-          <li>إشعارات واتساب فورية لأولياء الأمور</li>
-          <li>إدارة باصات مع تتبع صعود الطلاب</li>
-          <li>تقارير شاملة وتصدير لنظام نور</li>
-          <li>8 أدوار وصلاحيات مخصصة</li>
-        </ul>
-        <div class="pc-actions">
-          <a href="darb/index.html" class="btn-sm bsm-glow">📖 عرض المشروع</a>
-          <a href="#contact" class="btn-sm bsm-ghost">📬 طلب تجريبي</a>
+        <div class="pc-info">
+          <div class="pc-live">مُطبَّق ومُشغَّل الآن</div>
+          <h3 class="pc-title">نظام دَرب لإدارة شؤون الطلاب</h3>
+          <p class="pc-desc">حل شامل لمتابعة الغياب والتأخر، وإشعار أولياء الأمور تلقائياً عبر واتساب، وإدارة الباصات المدرسية — مُطوَّر من تجربة ميدانية حقيقية.</p>
+          <ul class="pc-feats">
+            <li>تسجيل الغياب والتأخر من أي هاتف</li>
+            <li>إشعارات واتساب فورية لأولياء الأمور</li>
+            <li>إدارة باصات مع تتبع صعود الطلاب</li>
+            <li>تقارير شاملة وتصدير لنظام نور</li>
+            <li>8 أدوار وصلاحيات مخصصة</li>
+          </ul>
+          <div class="pc-actions">
+            <a href="darb/index.html" class="btn-sm bsm-glow"><span class="ic ic-float">📖</span> عرض المشروع</a>
+            <a href="#contact" class="btn-sm bsm-ghost"><span class="ic ic-wobble">📬</span> طلب تجريبي</a>
+          </div>
         </div>
       </div>
     </div>
@@ -500,12 +645,12 @@ footer span{
 <!-- CONTACT -->
 <section id="contact">
   <div class="contact-inner reveal">
-    <div class="sec-tag" style="margin:0 auto 20px;display:table">✦ تواصل</div>
+    <div class="sec-tag" style="margin:0 auto 20px;display:table"><span class="ic ic-spin">✦</span> تواصل</div>
     <h2 class="contact-title">هل لديك مشروع في ذهنك؟</h2>
     <p class="contact-sub">أسعد بالتواصل ومناقشة احتياجاتك البرمجية</p>
     <div class="contact-links">
-      <a href="https://wa.me/966505187895" target="_blank" class="clink">📲 واتساب</a>
-      <a href="mailto:moon15mm@gmail.com" class="clink">📧 البريد الإلكتروني</a>
+      <a href="https://wa.me/966505187895" target="_blank" class="clink"><span class="ic ic-bounce">📲</span> واتساب</a>
+      <a href="mailto:moon15mm@gmail.com" class="clink"><span class="ic ic-float">📧</span> البريد الإلكتروني</a>
     </div>
   </div>
 </section>
@@ -536,11 +681,70 @@ footer span{
   tick();
 })();
 
+/* ══ COUNT-UP ══ */
+function animateCount(el, target, suffix, duration) {
+  var start = 0;
+  var startTime = null;
+  function step(timestamp) {
+    if (!startTime) startTime = timestamp;
+    var progress = Math.min((timestamp - startTime) / duration, 1);
+    // easeOutExpo
+    var eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+    var current = Math.floor(eased * target);
+    el.textContent = current + suffix;
+    if (progress < 1) requestAnimationFrame(step);
+    else el.textContent = target + suffix;
+  }
+  requestAnimationFrame(step);
+}
+
+var countObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+    if (!entry.isIntersecting) return;
+    var el = entry.target;
+    var target = parseInt(el.dataset.target);
+    var suffix = el.dataset.suffix || '';
+    if (!isNaN(target)) {
+      animateCount(el, target, suffix, 1400);
+    }
+    countObs.unobserve(el);
+  });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('[data-target]').forEach(function(el) {
+  el.textContent = '0' + (el.dataset.suffix || '');
+  countObs.observe(el);
+});
+
 /* ══ REVEAL ══ */
-var obs=new IntersectionObserver(function(e){
-  e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible')});
-},{threshold:.1});
-document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el)});
+var revObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(function(el) { revObs.observe(el); });
+
+/* ══ SKILL CHIP STAGGER ══ */
+document.querySelectorAll('.skill-chip').forEach(function(chip, i) {
+  chip.style.animationDelay = (i * 0.1) + 's';
+  chip.style.opacity = '0';
+  chip.style.transform = 'translateY(12px)';
+  chip.style.transition = 'opacity .5s ' + (i * 0.08) + 's, transform .5s ' + (i * 0.08) + 's, border-color .2s, background .2s';
+});
+var chipObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+    if (!entry.isIntersecting) return;
+    entry.target.querySelectorAll('.skill-chip').forEach(function(chip) {
+      chip.style.opacity = '1';
+      chip.style.transform = 'translateY(0)';
+    });
+    chipObs.unobserve(entry.target);
+  });
+}, { threshold: 0.2 });
+var skillGrid = document.querySelector('.skills-grid');
+if (skillGrid) chipObs.observe(skillGrid);
 </script>
 </body>
 </html>
